@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;STM32G431KB_F1TENTH_FIRMWARE/STM32G431KB.ioc&apos; to &apos;STM32G431KB_F1TENTH_FIRMWARE.ioc&apos;" description="Rename resource &apos;STM32G431KB.ioc&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="STM32G431KB.ioc" name="STM32G431KB_F1TENTH_FIRMWARE.ioc" stamp="1710926330807" updateReferences="true"/>
+</session>

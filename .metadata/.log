@@ -1,0 +1,38 @@
+!SESSION 2024-03-20 16:17:24.500 -----------------------------------------------
+eclipse.buildId=Version 1.14.1
+java.version=17.0.8.1
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -data C:\Users\08809\Desktop\FIBO Online\FRA532 (Mobile Robot)\F1TENTH_PROJECT
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2024-03-20 16:17:29.614
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2024-03-20 16:17:29.620
+!MESSAGE Log4j2 initialized with config file C:\Users\08809\Desktop\FIBO Online\FRA532 (Mobile Robot)\F1TENTH_PROJECT\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2024-03-20 16:17:33.703
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.cdt.core 1 0 2024-03-20 16:18:30.312
+!MESSAGE Indexed 'STM32G431KB_F1TENTH_FIRMWARE' (33 sources, 165 headers) in 5.94 sec: 18,679 declarations; 99,780 references; 3 unresolved inclusions; 46 syntax errors; 171 unresolved names (0.14%)
+
+!ENTRY org.eclipse.core.resources 4 77 2024-03-20 16:18:31.746
+!MESSAGE Invalid project description.
+!SUBENTRY 1 unknown 0 0 2024-03-20 16:18:31.746
+!MESSAGE OK
+!SUBENTRY 1 org.eclipse.core.resources 4 77 2024-03-20 16:18:31.746
+!MESSAGE C:\Users\08809\Desktop\FIBO Online\FRA532 (Mobile Robot)\F1TENTH_PROJECT\STM32G431KB_F1TENTH_FIRMWARE overlaps the location of another project: 'STM32G431KB_F1TENTH_FIRMWARE'
+
+!ENTRY com.st.stm32cube.common.projectcreation 4 0 2024-03-20 16:18:31.747
+!MESSAGE Project is null
+
+!ENTRY org.eclipse.core.resources 4 77 2024-03-20 16:19:28.478
+!MESSAGE Invalid project description.
+!SUBENTRY 1 unknown 0 0 2024-03-20 16:19:28.478
+!MESSAGE OK
+!SUBENTRY 1 org.eclipse.core.resources 4 77 2024-03-20 16:19:28.478
+!MESSAGE C:\Users\08809\Desktop\FIBO Online\FRA532 (Mobile Robot)\F1TENTH_PROJECT\STM32G431KB_F1TENTH_FIRMWARE overlaps the location of another project: 'STM32G431KB_F1TENTH_FIRMWARE'
+
+!ENTRY org.eclipse.cdt.core 1 0 2024-03-20 16:23:35.899
+!MESSAGE Indexed 'STM32G431KB_F1TENTH_FIRMWARE' (32 sources, 129 headers) in 3.56 sec: 15,421 declarations; 94,934 references; 3 unresolved inclusions; 46 syntax errors; 171 unresolved names (0.15%)
