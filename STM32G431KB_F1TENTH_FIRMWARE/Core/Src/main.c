@@ -18,8 +18,8 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "dma.h"
 #include "i2c.h"
-#include "spi.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
@@ -37,7 +37,9 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define BNO055_ADD_H 0x29 << 1
+#define BNO055_ADD_L 0x28 << 1
+#define CHIP_ID 0x00
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -48,7 +50,8 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+uint8_t RxBuffer[10];
+HAL_StatusTypeDef i2c_status;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -91,14 +94,14 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_USART2_UART_Init();
   MX_I2C1_Init();
-  MX_TIM1_Init();
   MX_TIM3_Init();
   MX_TIM4_Init();
-  MX_TIM16_Init();
-  MX_SPI1_Init();
-  MX_TIM15_Init();
+  MX_I2C3_Init();
+  MX_TIM2_Init();
+  MX_TIM8_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -107,6 +110,9 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+//	HAL_I2C_Mem_Read(&hi2c3, BNO055_ADD_L, CHIP_ID, 1, RxBuffer, 1, 100);
+	i2c_status = HAL_I2C_Mem_Read_DMA(&hi2c3, BNO055_ADD_L, CHIP_ID, 1, RxBuffer, 1);
+	HAL_Delay(1);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
