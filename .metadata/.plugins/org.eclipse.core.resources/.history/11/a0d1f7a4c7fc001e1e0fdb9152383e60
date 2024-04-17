@@ -1,0 +1,20 @@
+/*
+ * RC_Signal.c
+ *
+ *  Created on: Apr 17, 2024
+ *      Author: kwan
+ */
+
+#include "RC_Signal.h"
+
+uint8_t RC_Signal_Init(
+		RC_Signal_Structure *RCx,
+		float cpu_freq,
+		float pwm_freq,
+		bool isCHN
+)
+{
+	HAL_TIM_Base_Start(RCx->htimx);
+	if (isCHN) HAL_TIMEx_PWMN_Start(Mx->htimx, Mx->channelx);
+	else HAL_TIM_PWM_Start(Mx->htimx, Mx->channelx);
+}

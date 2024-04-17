@@ -1,0 +1,24 @@
+/*
+ * Pukkuu.h
+ *
+ *  Created on: Apr 3, 2024
+ *      Author: kwan
+ */
+
+#ifndef INC_PUKKUU_H_
+#define INC_PUKKUU_H_
+
+#include "stm32g4xx_hal.h"
+
+#define CPU_FREQ 170 * 1.0e6
+
+void Cytron_MDXX_Init(
+		TIM_HandleTypeDef *htimx,
+		uint16_t TIM_CHANNEL_x,
+		GPIO_TypeDef *GPIOx,
+		uint16_t GPIO_Pin,
+		float freq,
+		uint8_t Is_CHN
+);
+
+#endif /* INC_PUKKUU_H_ */

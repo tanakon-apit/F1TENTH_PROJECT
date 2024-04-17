@@ -1,0 +1,21 @@
+/*
+ * User_function.h
+ *
+ *  Created on: Apr 17, 2024
+ *      Author: kwan
+ */
+
+#ifndef INC_USER_FUNCTION_H_
+#define INC_USER_FUNCTION_H_
+
+#include "stm32g4xx_hal.h"
+
+struct MotorDriver_Structure {
+	TIM_HandleTypeDef *htimx;
+	uint32_t channelx;
+	GPIO_TypeDef *port;
+	uint16_t pin;
+	uint16_t overflow;
+};
+
+#endif /* INC_USER_FUNCTION_H_ */

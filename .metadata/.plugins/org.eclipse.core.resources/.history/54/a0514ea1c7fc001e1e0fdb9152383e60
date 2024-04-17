@@ -1,0 +1,33 @@
+/*
+ * RC_Signal.h
+ *
+ *  Created on: Apr 17, 2024
+ *      Author: kwan
+ */
+
+#ifndef INC_RC_SIGNAL_H_
+#define INC_RC_SIGNAL_H_
+
+#include "stm32g4xx_hal.h"
+
+typedef struct {
+	TIM_HandleTypeDef *htimx;
+	uint32_t channelx;
+	GPIO_TypeDef *port;
+	uint16_t pin;
+	uint32_t pulse_width;
+}RC_Signal_Structure;
+
+typedef enum {
+	False = 0,
+	True
+}bool;
+
+uint8_t RC_Signal_Init(
+		RC_Signal_Structure *RCx,
+		float cpu_freq,
+		float pwm_freq,
+		bool isCHN
+);
+
+#endif /* INC_RC_SIGNAL_H_ */

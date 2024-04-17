@@ -1,0 +1,20 @@
+/*
+ * User_function.c
+ *
+ *  Created on: Apr 17, 2024
+ *      Author: kwan
+ */
+
+#include "User_function.h"
+
+uint8_t MotorDriver_Init(
+		MotorDriver_Structure *Mx,
+		float cpu_freq,
+		float pwm_freq,
+		uint8_t isCHN
+)
+{
+	  HAL_TIM_Base_Start(Mx->htimx);
+	  if (isCHN) HAL_TIMEx_PWMN_Start(Mx->htimx, Mx->channelx);
+	  else HAL_TIM_PWM_Start(Mx->htimx, Mx->channelx);
+}

@@ -1,0 +1,12 @@
+23:24:02 **** Incremental Build of configuration Debug for project STM32G431KB_F1TENTH_FIRMWARE ****
+make -j8 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G431xx -c -I../Core/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../Drivers/CMSIS/Include -I"C:/Users/kwan2/Documents/3-2 FIBO/FRA532 Mobile Robot/F1TENTH_PROJECT/STM32G431KB_F1TENTH_FIRMWARE/Library/inc" -I"C:/Users/kwan2/Documents/3-2 FIBO/FRA532 Mobile Robot/F1TENTH_PROJECT/STM32G431KB_F1TENTH_FIRMWARE/Config/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c:34:10: fatal error: Servo.c: No such file or directory
+   34 | #include "Servo.c"
+      |          ^~~~~~~~~
+compilation terminated.
+make: *** [Core/Src/subdir.mk:49: Core/Src/main.o] Error 1
+"make -j8 all" terminated with exit code 2. Build might be incomplete.
+
+23:24:03 Build Failed. 2 errors, 0 warnings. (took 655ms)
+

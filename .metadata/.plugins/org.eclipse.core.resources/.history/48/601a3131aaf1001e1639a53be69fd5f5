@@ -1,0 +1,19 @@
+/*
+ * Pukkuu.c
+ *
+ *  Created on: Apr 3, 2024
+ *      Author: kwan
+ */
+
+#include "Pukkuu.h"
+
+void Cytron_MDXX_Init(
+		TIM_HandleTypeDef *htimx,
+		uint16_t TIM_CHANNEL_x,
+		GPIO_TypeDef *GPIOx,
+		uint16_t GPIO_Pin,
+		float freq
+)
+{
+	HAL_TIM_Base_Start(htimx);
+}

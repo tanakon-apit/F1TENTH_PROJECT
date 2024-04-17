@@ -1,0 +1,38 @@
+/*
+ * Pukkuu.c
+ *
+ *  Created on: Apr 3, 2024
+ *      Author: kwan
+ */
+
+#include "Pukkuu.h"
+
+//void Cytron_MDXX_Init(
+//		TIM_HandleTypeDef *htimx,
+//		uint16_t TIM_CHANNEL_x,
+//		GPIO_TypeDef *GPIOx,
+//		uint16_t GPIO_Pin,
+//		float freq,
+//		uint8_t Is_CHN
+//)
+//{
+//	HAL_TIM_Base_Start(htimx);
+//	if (Is_CHN)
+//	{
+//		HAL_TIMEx_PWMN_Start(htimx, TIM_CHANNEL_x);
+//	}
+//	else
+//	{
+//		HAL_TIM_PWM_Start(htimx, TIM_CHANNEL_x);
+//	}
+//	if (freq == 0)
+//		{
+//			__HAL_TIM_SET_COMPARE(htimx, TIM_CHANNEL_x, 0);
+//			return 0;
+//		} else if (freq >= CPU_FREQ / 2.0) return -1;
+//		uint32_t period_cyc = (uint32_t) (CPU_FREQ / freq);
+//		uint16_t prescaler = (uint16_t) (period_cyc / 65535 + 1);
+//		uint16_t overflow = (uint16_t) ((period_cyc + (prescaler / 2)) / prescaler);
+//		__HAL_TIM_SET_PRESCALER(htimx, prescaler);
+//		__HAL_TIM_SET_AUTORELOAD(htimx, overflow);
+//}

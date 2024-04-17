@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;STM32G431KB_F1TENTH_FIRMWARE/Library/inc/pwm_freq.h.txt&apos; to &apos;pwm_freq.h&apos;" description="Rename resource &apos;pwm_freq.h.txt&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Library/inc/pwm_freq.h.txt" name="pwm_freq.h" stamp="1712136162226" updateReferences="true"/>
+</session>

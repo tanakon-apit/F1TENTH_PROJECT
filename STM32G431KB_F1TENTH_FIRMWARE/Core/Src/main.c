@@ -28,6 +28,10 @@
 /* USER CODE BEGIN Includes */
 #include "Controller.h"
 #include "Cytron_Motor_260rpm_250W.h"
+#include "pwm_freq.h"
+#include "User_function.h"
+#include "Servo.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -48,6 +52,10 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+Servo_Structure S1 = {
+		.htimx = &htim16,
+		.channelx = TIM_CHANNEL_1
+};
 
 /* USER CODE END PV */
 
@@ -68,6 +76,7 @@ void SystemClock_Config(void);
   */
 int main(void)
 {
+
   /* USER CODE BEGIN 1 */
 
   /* USER CODE END 1 */
@@ -95,11 +104,15 @@ int main(void)
   MX_TIM1_Init();
   MX_TIM3_Init();
   MX_TIM4_Init();
-  MX_TIM16_Init();
   MX_SPI1_Init();
   MX_TIM15_Init();
+  MX_TIM16_Init();
   /* USER CODE BEGIN 2 */
 
+//  HAL_TIM_Base_Start(&htim16); // Start Timer
+//  HAL_TIMEx_PWMN_Start(&htim16, TIM_CHANNEL_1); // Start PWM Mode
+
+  Servo_Init(&S1, 170*1.0e6, 50.0, True);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -109,6 +122,11 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
+	  RC_Signal_Write(&S1, 1.5);
+
+	  HAL_Delay(1000);
+
   }
   /* USER CODE END 3 */
 }
