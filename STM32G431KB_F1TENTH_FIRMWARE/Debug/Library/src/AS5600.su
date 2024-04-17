@@ -1,0 +1,10 @@
+../Library/src/AS5600.c:35:9:AS5600_isConnected	24	static
+../Library/src/AS5600.c:53:10:AS5600_readReg2	32	static
+../Library/src/AS5600.c:79:10:AS5600_readAngle	24	static
+../Library/src/AS5600.c:92:9:AS5600_getCumulativePosition	24	static
+../Library/src/AS5600.c:114:7:AS5600_raw2rad	24	static
+../Library/src/AS5600.c:119:9:AS5600_resetCumulativePosition	24	static
+../Library/src/AS5600.c:128:5:AS5600_lastError	16	static
+../Library/src/AS5600.c:135:9:AS5600_getRevolutions	16	static
+../Library/src/AS5600.c:144:9:AS5600_resetPosition	24	static
+../Library/src/AS5600.c:151:7:AS5600_getAngularSpeed	48	static

@@ -1,0 +1,11 @@
+status
+buf
+val
+ret
+AS5600_ADDRESS
+REG_ANGLE
+reg
+Rad
+Cumulative_Rad
+spi_buf
+_error

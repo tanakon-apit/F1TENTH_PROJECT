@@ -1,0 +1,68 @@
+/*
+ * AS5600.c
+ *
+ *  Created on: Apr 18, 2024
+ *      Author: tucha
+ */
+
+#include <AS5600.h>
+
+/* USER CODE BEGIN PID */
+uint8_t AS5600_isConnected(I2C_HandleTypeDef* hi2cx)
+{
+	_error = AS5600_OK;
+	reg_buf[0] = AS5600_ANGLE;
+	ret = HAL_I2C_Master_Transmit(hi2cx, _address, reg_buf, 1, HAL_MAX_DELAY);
+	if (ret != HAL_OK){
+		_error = AS5600_ERROR_I2C_READ_2;
+		return 0;
+	}
+
+	ret = HAL_I2C_Master_Receive(hi2cx, _address, Data_buf, 2, HAL_MAX_DELAY);
+	if (ret != HAL_OK){
+		_error = AS5600_ERROR_I2C_READ_3;
+		return 0;
+	}
+	return 1;
+}
+
+uint16_t AS5600_readReg2(I2C_HandleTypeDef* hi2cx, uint8_t reg)
+{
+	_error = AS5600_OK;
+	reg_buf[0] = AS5600_ANGLE;
+	ret = HAL_I2C_Master_Transmit(hi2cx, _address, reg_buf, 1, HAL_MAX_DELAY);
+	if (ret != HAL_OK){
+		_error = AS5600_ERROR_I2C_READ_2;
+		return 0;
+	}
+
+	uint16_t data;
+
+	ret = HAL_I2C_Master_Receive(hi2cx, _address, Data_buf, 2, HAL_MAX_DELAY);
+	if (ret != HAL_OK){
+
+		_error = AS5600_ERROR_I2C_READ_3;
+		return 0;
+	}
+	else{
+		data = Data_buf[0];
+		data <<= 8;
+		data += Data_buf[1];
+		return data ;
+	}
+}
+
+uint16_t readAngle(I2C_HandleTypeDef* hi2cx)
+{
+	uint16_t value = AS5600_readReg2(hi2cx, AS5600_ANGLE) & 0x0FFF;
+	//  if (_offset > 0) value = (value + _offset) & 0x0FFF;
+	//
+	//  if ((_directionPin == AS5600_SW_DIRECTION_PIN) &&
+	//      (_direction == AS5600_COUNTERCLOCK_WISE))
+	//  {
+	//    value = (4096 - value) & 0x0FFF;
+	//  }
+	return value;
+}
+
+/* USER CODE BEGIN PID */

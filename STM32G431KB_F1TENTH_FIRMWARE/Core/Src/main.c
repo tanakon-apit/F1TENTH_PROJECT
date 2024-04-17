@@ -19,7 +19,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "i2c.h"
-#include "spi.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
@@ -28,6 +27,8 @@
 /* USER CODE BEGIN Includes */
 #include "Controller.h"
 #include "Cytron_Motor_260rpm_250W.h"
+#include "AS5600.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -48,78 +49,54 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-// Math
-const float PI = 3.141592;
+int debug_status;
+int16_t val;
+float Rad;
+float Cumulative_Rad;
+int8_t status = 1;
+float revCount;
 
-
-static const uint8_t AS5600_ADDRESS = 0x36 << 1;
-const uint8_t AS5600_ANGLE     = 0x0E;   //  + 0x0F
-
-//  setDirection
-const uint8_t AS5600_CLOCK_WISE         = 0;  //  LOW
-const uint8_t AS5600_COUNTERCLOCK_WISE  = 1;  //  HIGH
-
-//  0.087890625;
-const float   AS5600_RAW_TO_DEGREES     = 360.0 / 4096;
-const float   AS5600_DEGREES_TO_RAW     = 4096 / 360.0;
-//  0.00153398078788564122971808758949;
-const float   AS5600_RAW_TO_RADIANS     = PI * 2.0 / 4096;
-//  4.06901041666666e-6
-const float   AS5600_RAW_TO_RPM         = 60.0 / 4096;
-
-//  getAngularSpeed
-const uint8_t AS5600_MODE_DEGREES       = 0;
-const uint8_t AS5600_MODE_RADIANS       = 1;
-const uint8_t AS5600_MODE_RPM           = 2;
-
-//  ERROR CODES
-const int     AS5600_OK                 = 0;
-const int     AS5600_ERROR_I2C_READ_0   = -100;
-const int     AS5600_ERROR_I2C_READ_1   = -101;
-const int     AS5600_ERROR_I2C_READ_2   = -102;
-const int     AS5600_ERROR_I2C_READ_3   = -103;
-const int     AS5600_ERROR_I2C_WRITE_0  = -200;
-const int     AS5600_ERROR_I2C_WRITE_1  = -201;
-
-
+uint64_t timestamp;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-HAL_StatusTypeDef ret;
-uint8_t reg_buf[1];
-uint8_t buf[12];
-uint8_t Data_buf[2];
-int16_t val;
-float Rad;
-float Cumulative_Rad;
-int8_t status = 1;
-
-//  for getAngularSpeed()
-uint32_t _lastMeasurement = 0;
-int16_t  _lastAngle       = 0;
-
-//  for readAngle() and rawAngle()
-uint16_t _offset          = 0;
-
-//  cumulative position counter
-//  works only if the sensor is read often enough.
-int32_t  _position        = 0;
-int16_t  _lastPosition    = 0;
-
-uint16_t readReg2(uint8_t reg);
-uint16_t readAngle();
-int32_t getCumulativePosition();
-float getAngularSpeed(uint8_t mode);
-float raw2rad(uint16_t value);
-
-
-//Protected
-uint8_t  _address         = AS5600_ADDRESS;
-//uint8_t  _directionPin    = 255;
-//uint8_t  _direction       = AS5600_CLOCK_WISE;
-int      _error           = AS5600_OK;
+//HAL_StatusTypeDef ret;
+//uint8_t reg_buf[1];
+//uint8_t buf[12];
+//uint8_t Data_buf[2];
+//int16_t val;
+//float Rad;
+//float Cumulative_Rad;
+//int8_t status = 1;
+//
+////  for getAngularSpeed()
+//uint32_t _lastMeasurement = 0;
+//int16_t  _lastAngle       = 0;
+//
+////  for readAngle() and rawAngle()
+//uint16_t _offset          = 0;
+//
+////  cumulative position counter
+////  works only if the sensor is read often enough.
+//int32_t  _position        = 0;
+//int16_t  _lastPosition    = 0;
+//
+//uint16_t readReg2(uint8_t reg);
+//uint16_t readAngle();
+//int32_t getCumulativePosition();
+//float getAngularSpeed(uint8_t mode);
+//float raw2rad(uint16_t value);
+//void begin();
+//uint8_t isConnected();
+//
+//
+////Protected
+//uint8_t  _address         = AS5600_ADDRESS;
+////uint8_t  _directionPin    = 255;
+////uint8_t  _direction       = AS5600_CLOCK_WISE;
+//int      _error           = AS5600_OK;
 
 /* USER CODE END PFP */
 
@@ -159,14 +136,24 @@ int main(void)
 	MX_GPIO_Init();
 	MX_USART2_UART_Init();
 	MX_I2C1_Init();
-	MX_TIM1_Init();
 	MX_TIM3_Init();
 	MX_TIM4_Init();
-	MX_TIM16_Init();
-	MX_SPI1_Init();
-	MX_TIM15_Init();
+	MX_TIM8_Init();
+	MX_USART1_UART_Init();
 	/* USER CODE BEGIN 2 */
+	//BNO080
+	//  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_SET);
 
+	// Enable write enable latch (allow write operations)
+	//  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET);
+	//  HAL_SPI_Transmit(&hspi1, pData, Size, 100);
+	//  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_SET);
+
+	// Read status register
+	//  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET);
+	//  HAL_SPI_Receive(&hspi1, (uint8_t *)spi_buf, 1, 100);
+	//  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_SET);
+	AS5600_isConnected(&hi2c1);
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
@@ -176,28 +163,26 @@ int main(void)
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */
-		//		for (int i = 0; i<2; i++){
-		//			reg_buf[i] = REG_ANGLE;
-		//			ret = HAL_I2C_Master_Transmit(&hi2c1, AS5600_ADDRESS, reg_buf, 1, HAL_MAX_DELAY);
-		//			if (ret != HAL_OK){
-		//				status = -1;
-		//			}
-		//
-		//			ret = HAL_I2C_Master_Receive(&hi2c1, AS5600_ADDRESS, buf, 2, HAL_MAX_DELAY);
-		//			if (ret != HAL_OK){
-		//				status = -2;
-		//			}
-		//			else {
-		//				status = 1;
-		//				val = ((int16_t)buf[0]);
-		//			}
-		//		}
 
-		val = readAngle();
-		Rad = raw2rad(val);
+		val = AS5600_readAngle(&hi2c1);
+		Rad = AS5600_raw2rad(val);
 
-		val = getCumulativePosition();
-		Cumulative_Rad = raw2rad(val);
+		val = AS5600_getCumulativePosition(&hi2c1);
+		Cumulative_Rad = AS5600_raw2rad(val);
+
+		if(HAL_GetTick() > timestamp)
+		{
+			timestamp += 100;
+			revCount = AS5600_getAngularSpeed(&hi2c1, AS5600_MODE_RADIANS);
+		}
+
+
+		debug_status = AS5600_lastError();
+
+		// AS5600
+
+		//BNO080
+
 
 	}
 	/* USER CODE END 3 */
@@ -251,136 +236,7 @@ void SystemClock_Config(void)
 
 /* USER CODE BEGIN 4 */
 
-int32_t resetCumulativePosition(int32_t position)
-{
-  _lastPosition = readReg2(AS5600_ANGLE) & 0x0FFF;
-  int32_t old = _position;
-  _position = position;
-  return old;
-}
-
-
-int lastError()
-{
-  int value = _error;
-  _error = AS5600_OK;
-  return value;
-}
-
-int32_t getRevolutions()
-{
-  int32_t p = _position >> 12;  //  divide by 4096
-  return p;
-  // if (p < 0) p++;
-  // return p;
-}
-
-
-int32_t resetPosition(int32_t position)
-{
-  int32_t old = _position;
-  _position = position;
-  return old;
-}
-
-float getAngularSpeed(uint8_t mode)
-{
-  uint32_t now     = HAL_GetTick();
-  int      angle   = readAngle();
-  uint32_t deltaT  = now - _lastMeasurement;
-  int      deltaA  = angle - _lastAngle;
-
-  //  assumption is that there is no more than 180° rotation
-  //  between two consecutive measurements.
-  //  => at least two measurements per rotation (preferred 4).
-  if (deltaA >  2048) deltaA -= 4096;
-  if (deltaA < -2048) deltaA += 4096;
-  float    speed   = (deltaA * 1e6) / deltaT;
-
-  //  remember last time & angle
-  _lastMeasurement = now;
-  _lastAngle       = angle;
-
-  //  return radians, RPM or degrees.
-  if (mode == AS5600_MODE_RADIANS)
-  {
-    return speed * AS5600_RAW_TO_RADIANS;
-  }
-  if (mode == AS5600_MODE_RPM)
-  {
-    return speed * AS5600_RAW_TO_RPM;
-  }
-  //  default return degrees
-  return speed * AS5600_RAW_TO_DEGREES;
-}
-
-uint16_t readAngle()
-{
-	uint16_t value = readReg2(AS5600_ANGLE) & 0x0FFF;
-	//  if (_offset > 0) value = (value + _offset) & 0x0FFF;
-	//
-	//  if ((_directionPin == AS5600_SW_DIRECTION_PIN) &&
-	//      (_direction == AS5600_COUNTERCLOCK_WISE))
-	//  {
-	//    value = (4096 - value) & 0x0FFF;
-	//  }
-	return value;
-}
-
-int32_t getCumulativePosition()
-{
-  int16_t value = readReg2(AS5600_ANGLE) & 0x0FFF;
-
-  //  whole rotation CW?
-  //  less than half a circle
-  if ((_lastPosition > 2048) && ( value < (_lastPosition - 2048)))
-  {
-    _position = _position + 4096 - _lastPosition + value;
-  }
-  //  whole rotation CCW?
-  //  less than half a circle
-  else if ((value > 2048) && ( _lastPosition < (value - 2048)))
-  {
-    _position = _position - 4096 - _lastPosition + value;
-  }
-  else _position = _position - _lastPosition + value;
-  _lastPosition = value;
-
-  return _position;
-}
-
-float raw2rad(uint16_t value){
-	float rad = (value / 4096.0) * 3.14;
-	return rad;
-}
-
-uint16_t readReg2(uint8_t reg)
-{
-	_error = AS5600_OK;
-	reg_buf[0] = AS5600_ANGLE;
-	ret = HAL_I2C_Master_Transmit(&hi2c1, _address, reg_buf, 1, HAL_MAX_DELAY);
-	if (ret != HAL_OK){
-		_error = AS5600_ERROR_I2C_READ_2;
-		return 0;
-	}
-
-	uint16_t data;
-
-	ret = HAL_I2C_Master_Receive(&hi2c1, _address, Data_buf, 2, HAL_MAX_DELAY);
-	if (ret != HAL_OK){
-
-		_error = AS5600_ERROR_I2C_READ_3;
-		return 0;
-	}
-	else{
-		data = Data_buf[0];
-		data <<= 8;
-		data += Data_buf[1];
-		return data ;
-	}
-}
 /* USER CODE END 4 */
-
 
 /**
  * @brief  This function is executed in case of error occurrence.

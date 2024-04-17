@@ -1,0 +1,16 @@
+/*
+ * AS5600.c
+ *
+ *  Created on: Apr 18, 2024
+ *      Author: tucha
+ */
+
+#include <AS5600.h>
+
+/* USER CODE BEGIN PID */
+void AS5600_begin(uint8_t directionPin)
+{
+	_directionPin =
+}
+
+/* USER CODE BEGIN PID */

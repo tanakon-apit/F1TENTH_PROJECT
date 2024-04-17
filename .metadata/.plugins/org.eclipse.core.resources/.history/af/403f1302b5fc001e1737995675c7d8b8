@@ -1,0 +1,13 @@
+/*
+ * sh2_SensorValue.h
+ *
+ *  Created on: Apr 17, 2024
+ *      Author: tucha
+ */
+
+#ifndef INC_SH2_SENSORVALUE_H_
+#define INC_SH2_SENSORVALUE_H_
+
+
+
+#endif /* INC_SH2_SENSORVALUE_H_ */

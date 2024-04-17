@@ -5,14 +5,17 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../Library/src/AS5600.c \
 ../Library/src/Controller.c \
 ../Library/src/DC_Motor.c 
 
 OBJS += \
+./Library/src/AS5600.o \
 ./Library/src/Controller.o \
 ./Library/src/DC_Motor.o 
 
 C_DEPS += \
+./Library/src/AS5600.d \
 ./Library/src/Controller.d \
 ./Library/src/DC_Motor.d 
 
@@ -24,7 +27,7 @@ Library/src/%.o Library/src/%.su Library/src/%.cyclo: ../Library/src/%.c Library
 clean: clean-Library-2f-src
 
 clean-Library-2f-src:
-	-$(RM) ./Library/src/Controller.cyclo ./Library/src/Controller.d ./Library/src/Controller.o ./Library/src/Controller.su ./Library/src/DC_Motor.cyclo ./Library/src/DC_Motor.d ./Library/src/DC_Motor.o ./Library/src/DC_Motor.su
+	-$(RM) ./Library/src/AS5600.cyclo ./Library/src/AS5600.d ./Library/src/AS5600.o ./Library/src/AS5600.su ./Library/src/Controller.cyclo ./Library/src/Controller.d ./Library/src/Controller.o ./Library/src/Controller.su ./Library/src/DC_Motor.cyclo ./Library/src/DC_Motor.d ./Library/src/DC_Motor.o ./Library/src/DC_Motor.su
 
 .PHONY: clean-Library-2f-src
 
