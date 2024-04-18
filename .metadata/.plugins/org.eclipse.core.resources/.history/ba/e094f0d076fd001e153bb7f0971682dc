@@ -57,7 +57,7 @@ Servo_Structure S1 = {
 		.channelx = TIM_CHANNEL_1
 };
 
-float pwm = 1.36;
+float pwm = 1.5;
 
 /* USER CODE END PV */
 

@@ -30,11 +30,7 @@ uint8_t Servo_Init(
 
 void RC_Signal_Write(
 		Servo_Structure *Sx,
-		float pwm
-);
-
-float pwm_to_degree(
-		float pwm
+		float pulse_width
 );
 
 #endif /* INC_SERVO_H_ */

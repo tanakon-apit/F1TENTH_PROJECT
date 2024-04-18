@@ -57,8 +57,6 @@ Servo_Structure S1 = {
 		.channelx = TIM_CHANNEL_1
 };
 
-float pwm = 1.36;
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -125,9 +123,9 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-	  RC_Signal_Write(&S1, pwm);
+	  RC_Signal_Write(&S1, 1.5);
 
-//	  HAL_Delay(1000);
+	  HAL_Delay(1000);
 
   }
   /* USER CODE END 3 */

@@ -29,18 +29,11 @@ uint8_t Servo_Init(
 
 void RC_Signal_Write(
 		Servo_Structure *Sx,
-		float pwm
+		float pulse_width
 )
 {
-	__HAL_TIM_SET_COMPARE(Sx->htimx, Sx->channelx, (uint16_t) (pwm * Sx->gain));
+	__HAL_TIM_SET_COMPARE(Sx->htimx, Sx->channelx, (uint16_t) (pulse_width * Sx->gain));
 }
 
-float pwm_to_degree(
-		float pwm
-)
-{
-	float degree;
-	degree = (90 * pwm) - 135;
-}
 
 
