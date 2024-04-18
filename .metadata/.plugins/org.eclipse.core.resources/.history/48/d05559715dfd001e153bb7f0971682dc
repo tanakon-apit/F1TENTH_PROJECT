@@ -112,7 +112,7 @@ int main(void)
 //  HAL_TIM_Base_Start(&htim16); // Start Timer
 //  HAL_TIMEx_PWMN_Start(&htim16, TIM_CHANNEL_1); // Start PWM Mode
 
-  Servo_Init(&S1, 170*1.0e6, True);
+  Servo_Init(&S1, 170*1.0e6, 50.0, True);
   /* USER CODE END 2 */
 
   /* Infinite loop */

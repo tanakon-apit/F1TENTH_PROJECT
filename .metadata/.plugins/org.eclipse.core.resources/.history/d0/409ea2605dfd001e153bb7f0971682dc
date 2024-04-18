@@ -10,6 +10,7 @@
 uint8_t Servo_Init(
 		Servo_Structure *Sx,
 		float cpu_freq,
+		float pwm_freq,
 		bool isCHN
 )
 {

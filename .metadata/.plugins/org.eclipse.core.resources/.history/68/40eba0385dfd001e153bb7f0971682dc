@@ -7,7 +7,7 @@
 
 #include "Servo.h"
 
-uint8_t Servo_Init(
+uint8_t RC_Signal_Init(
 		Servo_Structure *Sx,
 		float cpu_freq,
 		bool isCHN

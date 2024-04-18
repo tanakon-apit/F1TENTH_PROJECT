@@ -1,2 +1,2 @@
-../Library/src/Servo.c:10:9:RC_Signal_Init	32	static
+../Library/src/Servo.c:10:9:Servo_Init	32	static
 ../Library/src/Servo.c:30:6:RC_Signal_Write	16	static
