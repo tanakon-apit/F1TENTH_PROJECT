@@ -29,16 +29,15 @@ uint8_t Servo_Init(
 		bool isCHN
 );
 
+void RC_Signal_Write(
+		Servo_Structure *Sx,
+		float pwm
+);
+
 void RC_Set_Input_Range(
 		Servo_Structure *Sx,
 		float _min,
 		float _max
 );
-
-void RC_Signal_Write(
-		Servo_Structure *Sx,
-		int32_t cmd
-);
-
 
 #endif /* INC_SERVO_H_ */

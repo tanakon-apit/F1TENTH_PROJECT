@@ -37,7 +37,7 @@ void RC_Set_Input_Range(
 
 void RC_Signal_Write(
 		Servo_Structure *Sx,
-		int32_t cmd
+		int32_t degree
 );
 
 

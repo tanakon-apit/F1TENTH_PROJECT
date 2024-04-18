@@ -27,29 +27,33 @@ uint8_t Servo_Init(
 	return 0;
 }
 
+void RC_Signal_Write(
+		Servo_Structure *Sx,
+		float pwm
+)
+{
+	__HAL_TIM_SET_COMPARE(Sx->htimx, Sx->channelx, (uint16_t) (pwm * Sx->gain));
+}
+
 void RC_Set_Input_Range(
 		Servo_Structure *Sx,
 		float _min, //degree
 		float _max
 )
 {
-	float m = (2.5 - 0.5) / (_max - _min);
-	float c = 0.5 - (m * _min);
+	float m = (_max - _min) / (2.5 - 0.5);
+	float c = _min - (m * 0.5);
 
 	Sx->offset = Sx->gain * c;
 	Sx->gain *= m;
 }
 
-void RC_Signal_Write(
-		Servo_Structure *Sx,
-		int32_t cmd
+float pwm_to_degree(
+		float pwm
 )
 {
-	float pwm = (Sx->gain * cmd) + Sx->offset;
-	__HAL_TIM_SET_COMPARE(Sx->htimx, Sx->channelx, (uint16_t) pwm);
+	float degree;
+	degree = (90 * pwm) - 135;
 }
-
-
-
 
 
