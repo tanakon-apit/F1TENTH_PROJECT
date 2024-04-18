@@ -7,13 +7,12 @@
 
 #include "BNO055.h"
 
-HAL_StatusTypeDef BNO055_Init(BNO055_Structure *bno, I2C_HandleTypeDef *hi2cx, uint8_t addr, OPRMode mode)
+HAL_StatusTypeDef BNO055_Init(BNO055_Structure *bno, I2C_HandleTypeDef *hi2cx, uint8_t addr)
 {
 	bno->TxBuffer[0] = Page_ID_00;
 	bno->TxBuffer[1] = CONFIGMODE;
 	bno->TxBuffer[2] = 0x20; // Reset
-	bno->TxBuffer[3] = Normal_Mode;
-	bno->TxBuffer[4] = mode;
+	bno->TxBuffer[3] = PWR_MODE_NORMAL;
 
 	bno->hi2cx = hi2cx;
 	bno->address = BNO055_ADD_H;
@@ -35,16 +34,6 @@ HAL_StatusTypeDef BNO055_Init(BNO055_Structure *bno, I2C_HandleTypeDef *hi2cx, u
 	HAL_I2C_Mem_Read_DMA(bno->hi2cx, bno->address, CHIP_ID, 1, bno->RxBuffer, 1);
 	if (bno->RxBuffer[0] != 0xA0) return HAL_ERROR;
 
-	HAL_delay(10);
-	HAL_I2C_Mem_Write_DMA(bno->hi2cx, address, PWR_MODE, 1, &bno->TxBuffer[3], 1);
 
-	HAL_delay(10);
-	HAL_I2C_Mem_Write_DMA(bno->hi2cx, address, PAGE_ID, 1, &bno->TxBuffer[0], 1);
-
-	HAL_delay(10);
-	HAL_I2C_Mem_Write_DMA(bno->hi2cx, address, OPR_MODE, 1, &bno->TxBuffer[4], 1);
-	HAL_delay(20);
-
-	return HAL_OK;
 }
 

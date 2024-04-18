@@ -84,7 +84,7 @@
 #define SYS_CLK_STATUS 0x38
 #define SYS_STATUS 0x39
 #define SYS_ERR 0x3A
-#define OPR_MODE 0x3D
+#define UNIT_SEL 0x3B
 #define UNIT_SEL 0x3B
 #define PWR_MODE 0x3E
 #define SYS_TRIGGER 0x3F
@@ -170,12 +170,6 @@ typedef enum {
 }OPRMode;
 
 typedef enum {
-	Normal_Mode = 0,
-	Low_Power_Mode,
-	Suspend_Mode
-}PWRMode;
-
-typedef enum {
 	P0_Config = 0x21,
 	P1_Config = 0x24,
 	P2_Config = 0x24,
@@ -213,15 +207,15 @@ typedef enum {
 	ABW_250Hz,
 	ABW_500Hz,
 	ABW_1000Hz
-}Abandwidth;
+}Abw;
 
 typedef enum {
-	APM_Normal = 0,
-	APM_Suspend,
-	APM_Low_power_1,
-	APM_Standby,
-	APM_Low_Power_2,
-	APM_Deep_Suspend
+	NormalA = 0,
+	SuspendA,
+	Low_power_1A,
+	StandbyA,
+	Low_Power_2A,
+	Deep_SuspendA
 }APwrMode;
 
 typedef enum {
@@ -241,14 +235,14 @@ typedef enum {
 	GBW_12Hz,
 	GBW_64Hz,
 	GBW_32Hz
-}Gbandwidth;
+}Gbw;
 
 typedef enum {
-	GPM_Normal = 0,
-	GPM_Fast_Power_Up,
-	GPM_Deep_Suspend,
-	GPM_Suspend,
-	GPM_Advanced_Powersave
+	NormalG = 0,
+	Fast_Power_UpG,
+	Deep_SuspendG,
+	SuspendG,
+	Advanced_PowersaveG
 }GPwrMode;
 
 typedef enum {
@@ -260,20 +254,20 @@ typedef enum {
 	MBW_20Hz,
 	MBW_25Hz,
 	MBW_30Hz
-}Mbandwidth;
+}Mbw;
 
 typedef enum {
-	MOM_Low_Power = 0,
-	MOM_Regular,
-	MOM_Enhanced_Regular,
-	MOM_High_Accuracy
+	Low_PowerM = 0,
+	RegularM,
+	Enhanced_RegularM,
+	High_AccuracyM
 }MOprMode;
 
 typedef enum {
-	MPM_Normal = 0,
-	MPM_Sleep,
-	MPM_Suspend,
-	MPM_Force_Mode
+	NormalM = 0,
+	SleepM,
+	SuspendM,
+	Force_ModeM
 }MPwrMode;
 
 typedef struct {
@@ -297,15 +291,13 @@ typedef struct {
 
 typedef struct {
 	I2C_HandleTypeDef *hi2cx;
-	uint8_t address;
 	Vector_3D accel;
 	Vector_3D gyro;
 	Vector_4D quat;
 	Vector_Euler euler;
 	uint8_t RxBuffer[10];
-	uint8_t TxBuffer[10];
 }BNO055_Structure;
 
-HAL_StatusTypeDef BNO055_Init(BNO055_Structure *bno, I2C_HandleTypeDef *hi2cx, uint8_t addr, OPRMode mode);
+HAL_StatusTypeDef BNO055_Init(BNO055_Structure *bno, I2C_HandleTypeDef *hi2cx);
 
 #endif /* INC_BNO055_H_ */

@@ -263,10 +263,10 @@ typedef enum {
 }Mbandwidth;
 
 typedef enum {
-	MOM_Low_Power = 0,
-	MOM_Regular,
-	MOM_Enhanced_Regular,
-	MOM_High_Accuracy
+	Low_PowerM = 0,
+	RegularM,
+	Enhanced_RegularM,
+	High_AccuracyM
 }MOprMode;
 
 typedef enum {
