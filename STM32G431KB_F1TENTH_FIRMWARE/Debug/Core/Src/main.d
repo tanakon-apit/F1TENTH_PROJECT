@@ -33,7 +33,8 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Core/Inc/dma.h ../Core/Inc/main.h ../Core/Inc/i2c.h ../Core/Inc/tim.h \
  ../Core/Inc/usart.h ../Core/Inc/gpio.h \
  C:/Users/08809/Desktop/FIBO\ Online/FRA532\ (Mobile\ Robot)/F1TENTH_PROJECT/STM32G431KB_F1TENTH_FIRMWARE/Library/inc/Controller.h \
- C:/Users/08809/Desktop/FIBO\ Online/FRA532\ (Mobile\ Robot)/F1TENTH_PROJECT/STM32G431KB_F1TENTH_FIRMWARE/Config/inc/Cytron_Motor_260rpm_250W.h
+ C:/Users/08809/Desktop/FIBO\ Online/FRA532\ (Mobile\ Robot)/F1TENTH_PROJECT/STM32G431KB_F1TENTH_FIRMWARE/Config/inc/Cytron_Motor_260rpm_250W.h \
+ C:/Users/08809/Desktop/FIBO\ Online/FRA532\ (Mobile\ Robot)/F1TENTH_PROJECT/STM32G431KB_F1TENTH_FIRMWARE/Library/inc/BNO055.h
 ../Core/Inc/main.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h:
 ../Core/Inc/stm32g4xx_hal_conf.h:
@@ -74,3 +75,4 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Core/Inc/gpio.h:
 C:/Users/08809/Desktop/FIBO\ Online/FRA532\ (Mobile\ Robot)/F1TENTH_PROJECT/STM32G431KB_F1TENTH_FIRMWARE/Library/inc/Controller.h:
 C:/Users/08809/Desktop/FIBO\ Online/FRA532\ (Mobile\ Robot)/F1TENTH_PROJECT/STM32G431KB_F1TENTH_FIRMWARE/Config/inc/Cytron_Motor_260rpm_250W.h:
+C:/Users/08809/Desktop/FIBO\ Online/FRA532\ (Mobile\ Robot)/F1TENTH_PROJECT/STM32G431KB_F1TENTH_FIRMWARE/Library/inc/BNO055.h:

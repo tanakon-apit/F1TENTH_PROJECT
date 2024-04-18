@@ -28,7 +28,6 @@
 /* USER CODE BEGIN Includes */
 #include "Controller.h"
 #include "Cytron_Motor_260rpm_250W.h"
-#include "BNO055.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -51,7 +50,8 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-BNO055_Structure bno;
+uint8_t RxBuffer[10];
+HAL_StatusTypeDef i2c_status;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -103,14 +103,16 @@ int main(void)
   MX_TIM2_Init();
   MX_TIM8_Init();
   /* USER CODE BEGIN 2 */
-  BNO055_Init(&bno, &hi2c3, 1, NDOF);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	HAL_Delay(100);
+//	HAL_I2C_Mem_Read(&hi2c3, BNO055_ADD_L, CHIP_ID, 1, RxBuffer, 1, 100);
+	i2c_status = HAL_I2C_Mem_Read_DMA(&hi2c3, BNO055_ADD_L, CHIP_ID, 1, RxBuffer, 1);
+	HAL_Delay(1);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

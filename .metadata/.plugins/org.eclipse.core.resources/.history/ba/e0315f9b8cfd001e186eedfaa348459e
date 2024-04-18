@@ -51,7 +51,8 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-BNO055_Structure bno;
+uint8_t RxBuffer[10];
+HAL_StatusTypeDef i2c_status;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -103,14 +104,14 @@ int main(void)
   MX_TIM2_Init();
   MX_TIM8_Init();
   /* USER CODE BEGIN 2 */
-  BNO055_Init(&bno, &hi2c3, 1, NDOF);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	HAL_Delay(100);
+	HAL_Delay(1);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
