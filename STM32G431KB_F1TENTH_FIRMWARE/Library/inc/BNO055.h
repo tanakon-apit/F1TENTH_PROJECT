@@ -295,11 +295,23 @@ typedef struct {
 	float yaw;
 }Vector_Euler;
 
+typedef enum {
+	MAGNETOMETER,
+	GYROSCOPE,
+	EULER,
+	ACCELEROMETER,
+	LINEARACCEL,
+	GRAVITY,
+	QUATERNION
+}Vector_Type;
+
 typedef struct {
 	I2C_HandleTypeDef *hi2cx;
 	uint8_t address;
+	uint8_t mode;
 	Vector_3D accel;
 	Vector_3D gyro;
+	Vector_3D mag;
 	Vector_4D quat;
 	Vector_Euler euler;
 	uint8_t RxBuffer[10];
@@ -307,5 +319,7 @@ typedef struct {
 }BNO055_Structure;
 
 HAL_StatusTypeDef BNO055_Init(BNO055_Structure *bno, I2C_HandleTypeDef *hi2cx, uint8_t addr, OPRMode mode);
+
+void BNO055_Read(BNO055_Structure *bno, Vector_Type type);
 
 #endif /* INC_BNO055_H_ */

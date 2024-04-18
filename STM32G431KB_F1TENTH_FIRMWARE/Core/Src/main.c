@@ -38,20 +38,19 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define BNO055_ADD_H 0x29 << 1
-#define BNO055_ADD_L 0x28 << 1
-#define CHIP_ID 0x00
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-
+#define CHECK(u) while(u != HAL_OK) HAL_Delay(100);
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
 BNO055_Structure bno;
+float fps;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -103,14 +102,26 @@ int main(void)
   MX_TIM2_Init();
   MX_TIM8_Init();
   /* USER CODE BEGIN 2 */
-  BNO055_Init(&bno, &hi2c3, 1, NDOF);
+  CHECK(BNO055_Init(&bno, &hi2c3, 0, NDOF))
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  uint32_t timestamp = HAL_GetTick() + 10;
   while (1)
   {
-	HAL_Delay(100);
+	uint32_t time = HAL_GetTick();
+
+	if (time > timestamp)
+	{
+		timestamp += 10;
+		uint32_t start_time = HAL_GetTick();
+		BNO055_Read(&bno, ACCELEROMETER);
+		BNO055_Read(&bno, GYROSCOPE);
+		BNO055_Read(&bno, EULER);
+		BNO055_Read(&bno, QUATERNION);
+		fps = 1000.0 / (HAL_GetTick() - start_time);
+	}
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

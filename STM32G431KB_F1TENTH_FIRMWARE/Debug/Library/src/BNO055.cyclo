@@ -1,1 +1,2 @@
-../Library/src/BNO055.c:10:19:BNO055_Init	4
+../Library/src/BNO055.c:10:19:BNO055_Init	5
+../Library/src/BNO055.c:60:6:BNO055_Read	13

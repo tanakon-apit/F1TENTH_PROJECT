@@ -1,1 +1,2 @@
-../Library/src/BNO055.c:10:19:BNO055_Init	32	static
+../Library/src/BNO055.c:10:19:BNO055_Init	48	static
+../Library/src/BNO055.c:60:6:BNO055_Read	80	static
