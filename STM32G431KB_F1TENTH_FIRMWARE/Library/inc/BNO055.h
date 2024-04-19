@@ -296,16 +296,54 @@ typedef struct {
 }Vector_Euler;
 
 typedef struct {
+	HAL_StatusTypeDef accel;
+	HAL_StatusTypeDef mag;
+	HAL_StatusTypeDef gyro;
+}Calibration_Stat;
+
+typedef struct {
+  int16_t accel_offset_x; /**< x acceleration offset */
+  int16_t accel_offset_y; /**< y acceleration offset */
+  int16_t accel_offset_z; /**< z acceleration offset */
+
+  int16_t mag_offset_x; /**< x magnetometer offset */
+  int16_t mag_offset_y; /**< y magnetometer offset */
+  int16_t mag_offset_z; /**< z magnetometer offset */
+
+  int16_t gyro_offset_x; /**< x gyroscrope offset */
+  int16_t gyro_offset_y; /**< y gyroscrope offset */
+  int16_t gyro_offset_z; /**< z gyroscrope offset */
+
+  int16_t accel_radius; /**< acceleration radius */
+
+  int16_t mag_radius; /**< magnetometer radius */
+}BNO055_offsets;
+
+typedef struct {
 	I2C_HandleTypeDef *hi2cx;
 	uint8_t address;
+	OPRMode mode;
 	Vector_3D accel;
 	Vector_3D gyro;
 	Vector_4D quat;
 	Vector_Euler euler;
-	uint8_t RxBuffer[10];
-	uint8_t TxBuffer[10];
+	BNO055_offsets offsets;
+	uint8_t RxBuffer[30];
+	uint8_t TxBuffer[30];
 }BNO055_Structure;
 
 HAL_StatusTypeDef BNO055_Init(BNO055_Structure *bno, I2C_HandleTypeDef *hi2cx, uint8_t addr, OPRMode mode);
+
+void BNO055_setMode(BNO055_Structure *bno, OPRMode *mode);
+
+uint8_t BNO055_read8(BNO055_Structure *bno, uint8_t Register_Address);
+
+uint8_t BNO055_write8(BNO055_Structure *bno, uint8_t Register_Address, uint8_t data);
+
+void BNO055_setSensoroffsets(BNO055_Structure *bno);
+
+void BNO055_getCalibration(BNO055_Structure *bno, uint8_t *sys, uint8_t *gyro, uint8_t *accel, uint8_t *mag);
+
+HAL_StatusTypeDef BNO055_isFullyCalibrated(BNO055_Structure *bno);
 
 #endif /* INC_BNO055_H_ */

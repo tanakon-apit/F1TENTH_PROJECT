@@ -1,0 +1,28 @@
+/*
+ * BNO055_offsets.h
+ *
+ *  Created on: Apr 19, 2024
+ *      Author: tucha
+ */
+
+#ifndef INC_BNO055_OFFSETS_H_
+#define INC_BNO055_OFFSETS_H_
+
+#define ACC_OFF_x 0
+#define accel_offset_y 0
+#define accel_offset_z 0
+
+#define mag_offset_x 0
+#define mag_offset_y 0
+#define mag_offset_z 0
+
+#define gyro_offset_x 0
+#define gyro_offset_y 0
+#define gyro_offset_z 0
+
+#define accel_radius 0
+
+#define mag_radius 0
+
+
+#endif /* INC_BNO055_OFFSETS_H_ */

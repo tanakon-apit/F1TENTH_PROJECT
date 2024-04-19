@@ -1,0 +1,13 @@
+/*
+ * BNO055_offsets.h
+ *
+ *  Created on: Apr 19, 2024
+ *      Author: tucha
+ */
+
+#ifndef INC_BNO055_OFFSETS_H_
+#define INC_BNO055_OFFSETS_H_
+
+
+
+#endif /* INC_BNO055_OFFSETS_H_ */
