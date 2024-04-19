@@ -46,12 +46,12 @@
 #define GYR_DATA_Z_LSB 0x18
 #define GYR_DATA_Z_MSB 0x19
 
-#define EUL_DATA_X_LSB 0x1A
-#define EUL_DATA_X_MSB 0x1B
-#define EUL_DATA_Y_LSB 0x1C
-#define EUL_DATA_Y_MSB 0x1D
-#define EUL_DATA_Z_LSB 0x1E
-#define EUL_DATA_Z_MSB 0x1F
+#define EUL_DATA_HEADING_LSB 0x1A
+#define EUL_DATA_HEADING_MSB 0x1B
+#define EUL_DATA_ROLL_LSB 0x1C
+#define EUL_DATA_ROLL_MSB 0x1D
+#define EUL_DATA_PITCH_LSB 0x1E
+#define EUL_DATA_PITCH_MSB 0x1F
 
 #define QUA_DATA_W_LSB 0x20
 #define QUA_DATA_W_MSB 0x21
@@ -277,22 +277,22 @@ typedef enum {
 }MPwrMode;
 
 typedef struct {
-	float x;
-	float y;
-	float z;
+	double x;
+	double y;
+	double z;
 }Vector_3D;
 
 typedef struct {
-	float x;
-	float y;
-	float z;
-	float w;
+	double x;
+	double y;
+	double z;
+	double w;
 }Vector_4D;
 
 typedef struct {
-	float roll;
-	float pitch;
-	float yaw;
+	double roll;
+	double pitch;
+	double yaw;
 }Vector_Euler;
 
 typedef enum {
@@ -309,17 +309,21 @@ typedef struct {
 	I2C_HandleTypeDef *hi2cx;
 	uint8_t address;
 	uint8_t mode;
+	HAL_StatusTypeDef flag;
 	Vector_3D accel;
-	Vector_3D gyro;
 	Vector_3D mag;
-	Vector_4D quat;
+	Vector_3D gyro;
 	Vector_Euler euler;
-	uint8_t RxBuffer[10];
-	uint8_t TxBuffer[10];
+	Vector_4D quat;
+	Vector_3D lin_acc;
+	Vector_3D grav;
+	uint8_t RxBuffer[44];
 }BNO055_Structure;
 
 HAL_StatusTypeDef BNO055_Init(BNO055_Structure *bno, I2C_HandleTypeDef *hi2cx, uint8_t addr, OPRMode mode);
 
 void BNO055_Read(BNO055_Structure *bno, Vector_Type type);
+
+void BNO055_Read_DMA(BNO055_Structure *bno, uint8_t fast_mode);
 
 #endif /* INC_BNO055_H_ */

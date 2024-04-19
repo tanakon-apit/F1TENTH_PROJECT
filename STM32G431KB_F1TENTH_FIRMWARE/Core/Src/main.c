@@ -50,7 +50,6 @@
 
 /* USER CODE BEGIN PV */
 BNO055_Structure bno;
-float fps;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -107,20 +106,15 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  uint32_t timestamp = HAL_GetTick() + 10;
+  uint32_t bno_time = HAL_GetTick() + 10;
   while (1)
   {
 	uint32_t time = HAL_GetTick();
-
-	if (time > timestamp)
+	if (bno.flag == HAL_OK && time >= bno_time)
 	{
-		timestamp += 10;
-		uint32_t start_time = HAL_GetTick();
-		BNO055_Read(&bno, ACCELEROMETER);
-		BNO055_Read(&bno, GYROSCOPE);
-		BNO055_Read(&bno, EULER);
-		BNO055_Read(&bno, QUATERNION);
-		fps = 1000.0 / (HAL_GetTick() - start_time);
+		bno_time += 10;
+		BNO055_Read_DMA(&bno, 1);
+		bno.flag = HAL_BUSY;
 	}
     /* USER CODE END WHILE */
 
@@ -176,7 +170,10 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c)
+{
+	if (hi2c->Instance == bno.hi2cx->Instance) bno.flag = HAL_OK;
+}
 /* USER CODE END 4 */
 
 /**

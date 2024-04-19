@@ -1,2 +1,3 @@
 ../Library/src/BNO055.c:10:19:BNO055_Init	48	static
-../Library/src/BNO055.c:60:6:BNO055_Read	80	static
+../Library/src/BNO055.c:58:6:BNO055_Read	80	static
+../Library/src/BNO055.c:149:6:BNO055_Read_DMA	88	static
