@@ -57,6 +57,8 @@ uint8_t gyro;
 uint8_t accel;
 uint8_t mag;
 
+uint8_t mode;
+uint8_t calibated;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -116,14 +118,21 @@ int main(void)
 
 	while(BNO055_isFullyCalibrated(&bno) != HAL_OK){
 		HAL_I2C_Mem_Read(bno.hi2cx, bno.address, OPR_MODE, 1, bno.RxBuffer, 1, 10);
-		uint8_t mode = bno.RxBuffer[0] & 0x0F;
+		mode = bno.RxBuffer[0] & 0x0F;
 		HAL_Delay(20);
 
 		HAL_I2C_Mem_Read(bno.hi2cx, bno.address, CALIB_STAT, 1, bno.RxBuffer, 1, 10);
-		uint8_t calibated = bno.RxBuffer[0] & 0x03;
+		calibated = bno.RxBuffer[0];
 		HAL_Delay(20);
 	}
 	sys = 1;
+
+	while(BNO055_getSensorOffsets(&bno) != HAL_OK){
+		sys = 2;
+	}
+
+	BNO055_setSensoroffsets(&bno);
+	sys = 3;
 
 	//  BNO055_read8(&bno, ACC_OFFSET_X_LSB);
 	/* USER CODE END 2 */

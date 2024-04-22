@@ -1,8 +1,9 @@
 ../Library/src/BNO055.c:16:19:BNO055_Init	48	static
-../Library/src/BNO055.c:67:6:BNO055_getCalibration	40	static
+../Library/src/BNO055.c:66:6:BNO055_getCalibration	48	static
 ../Library/src/BNO055.c:91:19:BNO055_isFullyCalibrated	40	static
-../Library/src/BNO055.c:166:6:BNO055_setMode	32	static
-../Library/src/BNO055.c:172:9:BNO055_read8	48	static
-../Library/src/BNO055.c:182:9:BNO055_write8	40	static
-../Library/src/BNO055.c:191:19:BNO055_getSensorOffsets	32	static
-../Library/src/BNO055.c:236:6:BNO055_setSensoroffsets	16	static
+../Library/src/BNO055.c:162:6:BNO055_setMode	32	static
+../Library/src/BNO055.c:168:9:BNO055_read8	48	static
+../Library/src/BNO055.c:178:9:BNO055_write8	40	static
+../Library/src/BNO055.c:187:19:BNO055_getSensorOffsets	40	static
+../Library/src/BNO055.c:237:6:BNO055_setSensoroffsets	80	static
+../Library/src/BNO055.c:308:6:BNO055_Read	80	static

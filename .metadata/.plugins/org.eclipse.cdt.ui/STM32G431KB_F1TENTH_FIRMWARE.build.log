@@ -1,10 +1,10 @@
-07:39:31 **** Incremental Build of configuration Debug for project STM32G431KB_F1TENTH_FIRMWARE ****
+00:01:16 **** Incremental Build of configuration Debug for project STM32G431KB_F1TENTH_FIRMWARE ****
 make -j16 all 
 arm-none-eabi-size  STM32G431KB_F1TENTH_FIRMWARE.elf 
    text	   data	    bss	    dec	    hex	filename
-  24660	     24	   2528	  27212	   6a4c	STM32G431KB_F1TENTH_FIRMWARE.elf
+  25552	     24	   2648	  28224	   6e40	STM32G431KB_F1TENTH_FIRMWARE.elf
 Finished building: default.size.stdout
  
 
-07:39:31 Build Finished. 0 errors, 0 warnings. (took 324ms)
+00:01:16 Build Finished. 0 errors, 0 warnings. (took 301ms)
 

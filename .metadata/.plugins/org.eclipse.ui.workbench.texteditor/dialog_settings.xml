@@ -6,8 +6,11 @@
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
-		<item key="selection" value="Rx"/>
+		<item key="selection" value="Calibration_Stat"/>
 		<list key="findhistory">
+			<item value="Calibration_Stat"/>
+			<item value="BNO055_getCalibration"/>
+			<item value="0xc"/>
 			<item value="Rx"/>
 			<item value="BNO055_setMode"/>
 			<item value="0x9"/>
