@@ -353,6 +353,8 @@ uint8_t BNO055_read8(BNO055_Structure *bno, uint8_t Register_Address);
 
 uint8_t BNO055_write8(BNO055_Structure *bno, uint8_t Register_Address, uint8_t data);
 
+HAL_StatusTypeDef BNO055_getSensorOffsets(BNO055_Structure *bno);
+
 void BNO055_setSensoroffsets(BNO055_Structure *bno);
 
 void BNO055_getCalibration(BNO055_Structure *bno, uint8_t *sys, uint8_t *gyro, uint8_t *accel, uint8_t *mag);
@@ -360,5 +362,9 @@ void BNO055_getCalibration(BNO055_Structure *bno, uint8_t *sys, uint8_t *gyro, u
 HAL_StatusTypeDef BNO055_isFullyCalibrated(BNO055_Structure *bno);
 
 void BNO055_Read(BNO055_Structure *bno, Vector_Type type);
+
+void BNO55_setAxisRemap(BNO055_Structure *bno, Remap_Config config);
+
+void BNO55_setAxisSign(BNO055_Structure *bno, Remap_Sign sign);
 
 #endif /* INC_BNO055_H_ */

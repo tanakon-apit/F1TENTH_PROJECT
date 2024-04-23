@@ -6,8 +6,10 @@
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
-		<item key="selection" value="Calibration_Stat"/>
+		<item key="selection" value="Remap"/>
 		<list key="findhistory">
+			<item value="remap"/>
+			<item value="Vector_Type"/>
 			<item value="Calibration_Stat"/>
 			<item value="BNO055_getCalibration"/>
 			<item value="0xc"/>
@@ -25,8 +27,8 @@
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item key="DIALOG_X_ORIGIN" value="8"/>
 		<item key="DIALOG_Y_ORIGIN" value="272"/>
-		<item key="DIALOG_WIDTH" value="322"/>
-		<item key="DIALOG_HEIGHT" value="391"/>
-		<item key="DIALOG_FONT_NAME" value="1|Leelawadee UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Leelawadee UI"/>
+		<item key="DIALOG_WIDTH" value="412"/>
+		<item key="DIALOG_HEIGHT" value="446"/>
+		<item key="DIALOG_FONT_NAME" value="1|Leelawadee UI|11.25|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|Leelawadee UI"/>
 	</section>
 </section>

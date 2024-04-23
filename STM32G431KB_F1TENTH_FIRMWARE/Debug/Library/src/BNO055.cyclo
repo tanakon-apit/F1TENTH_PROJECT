@@ -3,7 +3,9 @@
 ../Library/src/BNO055.c:91:19:BNO055_isFullyCalibrated	65
 ../Library/src/BNO055.c:162:6:BNO055_setMode	1
 ../Library/src/BNO055.c:168:9:BNO055_read8	1
-../Library/src/BNO055.c:178:9:BNO055_write8	1
-../Library/src/BNO055.c:187:19:BNO055_getSensorOffsets	4
-../Library/src/BNO055.c:237:6:BNO055_setSensoroffsets	3
-../Library/src/BNO055.c:308:6:BNO055_Read	15
+../Library/src/BNO055.c:177:9:BNO055_write8	1
+../Library/src/BNO055.c:186:19:BNO055_getSensorOffsets	4
+../Library/src/BNO055.c:236:6:BNO055_setSensoroffsets	3
+../Library/src/BNO055.c:279:6:BNO055_Read	15
+../Library/src/BNO055.c:370:6:BNO55_setAxisRemap	3
+../Library/src/BNO055.c:392:6:BNO55_setAxisSign	3

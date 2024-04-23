@@ -169,7 +169,6 @@ uint8_t BNO055_read8(BNO055_Structure *bno, uint8_t Register_Address)
 {
 	uint16_t Register_Address_u16 = Register_Address;
 	HAL_I2C_Mem_Read(bno->hi2cx, bno->address, Register_Address_u16, 1, bno->RxBuffer, 1, 10);
-	uint8_t Rx = bno->RxBuffer[0];
 	HAL_Delay(20);
 
 	return bno->RxBuffer[0];
@@ -269,37 +268,9 @@ void BNO055_setSensoroffsets(BNO055_Structure *bno)
 
 	HAL_I2C_Mem_Write(bno->hi2cx, bno->address, ACC_OFFSET_X_LSB, 1, txbuffer, 22, 10);
 
-
-//	BNO055_write8(bno, ACC_OFFSET_X_LSB, (bno->offsets.accel_offset_x) & 0x0FF);
-//	BNO055_write8(bno, ACC_OFFSET_X_MSB, (bno->offsets.accel_offset_x >> 8) & 0x0FF);
-//	BNO055_write8(bno, ACC_OFFSET_Y_LSB, (bno->offsets.accel_offset_y) & 0x0FF);
-//	BNO055_write8(bno, ACC_OFFSET_Y_MSB, (bno->offsets.accel_offset_y >> 8) & 0x0FF);
-//	BNO055_write8(bno, ACC_OFFSET_Z_LSB, (bno->offsets.accel_offset_z) & 0x0FF);
-//	BNO055_write8(bno, ACC_OFFSET_Z_MSB, (bno->offsets.accel_offset_z >> 8) & 0x0FF);
-//
-//	BNO055_write8(bno, MAG_OFFSET_X_LSB, (bno->offsets.mag_offset_x) & 0x0FF);
-//	BNO055_write8(bno, MAG_OFFSET_X_MSB, (bno->offsets.mag_offset_x >> 8) & 0x0FF);
-//	BNO055_write8(bno, MAG_OFFSET_Y_LSB, (bno->offsets.mag_offset_y) & 0x0FF);
-//	BNO055_write8(bno, MAG_OFFSET_Y_MSB, (bno->offsets.mag_offset_y >> 8) & 0x0FF);
-//	BNO055_write8(bno, MAG_OFFSET_Z_LSB, (bno->offsets.mag_offset_z) & 0x0FF);
-//	BNO055_write8(bno, MAG_OFFSET_Z_MSB, (bno->offsets.mag_offset_z >> 8) & 0x0FF);
-//
-//	BNO055_write8(bno, GYR_OFFSET_X_LSB, (bno->offsets.gyro_offset_x) & 0x0FF);
-//	BNO055_write8(bno, GYR_OFFSET_X_MSB, (bno->offsets.gyro_offset_x >> 8) & 0x0FF);
-//	BNO055_write8(bno, GYR_OFFSET_Y_LSB, (bno->offsets.gyro_offset_y) & 0x0FF);
-//	BNO055_write8(bno, GYR_OFFSET_Y_MSB, (bno->offsets.gyro_offset_y >> 8) & 0x0FF);
-//	BNO055_write8(bno, GYR_OFFSET_Z_LSB, (bno->offsets.gyro_offset_z) & 0x0FF);
-//	BNO055_write8(bno, GYR_OFFSET_Z_MSB, (bno->offsets.gyro_offset_z >> 8) & 0x0FF);
-//
-//	BNO055_write8(bno, ACC_RADIUS_LSB, (bno->offsets.accel_radius) & 0x0FF);
-//	BNO055_write8(bno, ACC_RADIUS_MSB, (bno->offsets.accel_radius >> 8) & 0x0FF);
-//
-//	BNO055_write8(bno, MAG_RADIUS_LSB, (bno->offsets.mag_radius) & 0x0FF);
-//	BNO055_write8(bno, MAG_RADIUS_MSB, (bno->offsets.mag_radius >> 8) & 0x0FF);
-
 	check_config = (BNO055_read8(bno, OPR_MODE) & 0x0F);
 	txbuffer[0] = (uint8_t)bno->mode;
-	if (check_config != CONFIGMODE){
+	if (check_config != txbuffer[0]){
 		HAL_I2C_Mem_Write(bno->hi2cx, bno->address, OPR_MODE, 1, txbuffer, 1, 10);
 		HAL_Delay(20);
 	}
@@ -394,6 +365,50 @@ void BNO055_Read(BNO055_Structure *bno, Vector_Type type)
 		bno->quat.w = w * scale;
 	}
 
+}
+
+void BNO55_setAxisRemap(BNO055_Structure *bno, Remap_Config config)
+{
+	uint8_t check_config = (BNO055_read8(bno, OPR_MODE) & 0x0F);
+	uint8_t txbuffer[40];
+	txbuffer[0] = CONFIGMODE;
+	if (check_config != CONFIGMODE){
+		HAL_I2C_Mem_Write(bno->hi2cx, bno->address, OPR_MODE, 1, txbuffer, 1, 10);
+		HAL_Delay(20);
+	}
+
+	txbuffer[0] = config;
+	HAL_I2C_Mem_Write(bno->hi2cx, bno->address, AXIS_MAP_CONFIG, 1, txbuffer, 1, 10);
+	HAL_Delay(20);
+
+	check_config = (BNO055_read8(bno, OPR_MODE) & 0x0F);
+	txbuffer[0] = (uint8_t)bno->mode;
+	if (check_config != txbuffer[0]){
+		HAL_I2C_Mem_Write(bno->hi2cx, bno->address, OPR_MODE, 1, txbuffer, 1, 10);
+		HAL_Delay(20);
+	}
+}
+
+void BNO55_setAxisSign(BNO055_Structure *bno, Remap_Sign sign)
+{
+	uint8_t check_config = (BNO055_read8(bno, OPR_MODE) & 0x0F);
+	uint8_t txbuffer[40];
+	txbuffer[0] = CONFIGMODE;
+	if (check_config != CONFIGMODE){
+		HAL_I2C_Mem_Write(bno->hi2cx, bno->address, OPR_MODE, 1, txbuffer, 1, 10);
+		HAL_Delay(20);
+	}
+
+	txbuffer[0] = sign;
+	HAL_I2C_Mem_Write(bno->hi2cx, bno->address, AXIS_MAP_SIGN, 1, txbuffer, 1, 10);
+	HAL_Delay(20);
+
+	check_config = (BNO055_read8(bno, OPR_MODE) & 0x0F);
+	txbuffer[0] = (uint8_t)bno->mode;
+	if (check_config != txbuffer[0]){
+		HAL_I2C_Mem_Write(bno->hi2cx, bno->address, OPR_MODE, 1, txbuffer, 1, 10);
+		HAL_Delay(20);
+	}
 }
 
 

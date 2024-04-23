@@ -134,14 +134,27 @@ int main(void)
 	BNO055_setSensoroffsets(&bno);
 	sys = 3;
 
+	BNO55_setAxisRemap(&bno, P0_Config);
+
+	BNO55_setAxisSign(&bno, P0_Sign);
+
 	//  BNO055_read8(&bno, ACC_OFFSET_X_LSB);
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
 	/* USER CODE BEGIN WHILE */
+	uint32_t bno_time = HAL_GetTick() + 10;
 	while (1)
 	{
-		HAL_Delay(100);
+		uint32_t time = HAL_GetTick();
+		if (time >= bno_time) //bno.flag == HAL_OK &&
+		{
+			bno_time += 10;
+			BNO055_Read(&bno, EULER);
+			BNO055_Read(&bno, LINEARACCEL);
+//			BNO055_Read(&bno, EULER);
+			bno.flag = HAL_BUSY;
+		}
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */
