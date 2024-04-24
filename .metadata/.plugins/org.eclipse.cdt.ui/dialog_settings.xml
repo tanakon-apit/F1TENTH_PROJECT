@@ -7,6 +7,8 @@
 		<item key="updateReferences" value="true"/>
 	</section>
 	<section name="completion_proposal_size">
+		<item key="size.x" value="428"/>
+		<item key="size.y" value="251"/>
 	</section>
 	<section name="org.eclipse.cdt.ui.text.hover.CMacroExpansionExploration">
 	</section>

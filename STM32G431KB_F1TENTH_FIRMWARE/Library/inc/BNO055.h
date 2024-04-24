@@ -10,6 +10,15 @@
 
 #include "stm32g4xx_hal.h"
 
+#ifndef INC_DATA_CONVERT_H_
+	typedef union {
+		uint16_t u16;
+		int16_t i16;
+		uint8_t u8[2];
+		int8_t i8[2];
+	}data16_t;
+#endif
+
 #define BNO055_ADD_H 0x29 << 1
 #define BNO055_ADD_L 0x28 << 1
 
@@ -306,6 +315,26 @@ typedef enum {
 }Vector_Type;
 
 typedef struct {
+	HAL_StatusTypeDef accel_stat;
+	HAL_StatusTypeDef mag_stat;
+	HAL_StatusTypeDef gyro_stat;
+}BNO055_Calibration_Status;
+
+typedef struct {
+	data16_t accel_offset_x;
+	data16_t accel_offset_y;
+	data16_t accel_offset_z;
+	data16_t mag_offset_x;
+	data16_t mag_offset_y;
+	data16_t mag_offset_z;
+	data16_t gyro_offset_x;
+	data16_t gyro_offset_y;
+	data16_t gyro_offset_z;
+	data16_t accel_radius;
+	data16_t mag_radius;
+}BNO055_Offsets;
+
+typedef struct {
 	I2C_HandleTypeDef *hi2cx;
 	uint8_t address;
 	uint8_t mode;
@@ -317,7 +346,7 @@ typedef struct {
 	Vector_4D quat;
 	Vector_3D lin_acc;
 	Vector_3D grav;
-	uint8_t RxBuffer[44];
+	data16_t DataBuffer[22];
 }BNO055_Structure;
 
 HAL_StatusTypeDef BNO055_Init(BNO055_Structure *bno, I2C_HandleTypeDef *hi2cx, uint8_t addr, OPRMode mode);
@@ -325,5 +354,11 @@ HAL_StatusTypeDef BNO055_Init(BNO055_Structure *bno, I2C_HandleTypeDef *hi2cx, u
 void BNO055_Read(BNO055_Structure *bno, Vector_Type type);
 
 void BNO055_Read_DMA(BNO055_Structure *bno, uint8_t fast_mode);
+
+void BNO055_Calibrated(BNO055_Structure *bno, BNO055_Calibration_Status *calib_stat, BNO055_Offsets *bno_off);
+
+void BNO055_SetOffsets(BNO055_Structure *bno, BNO055_Offsets *bno_offset);
+
+void BNO55_SetAxis(BNO055_Structure *bno, Remap_Config config, Remap_Sign sign);
 
 #endif /* INC_BNO055_H_ */

@@ -38,7 +38,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define BNO055_CALIB
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -50,6 +50,10 @@
 
 /* USER CODE BEGIN PV */
 BNO055_Structure bno;
+BNO055_Offsets bno_off;
+#ifdef BNO055_CALIB
+BNO055_Calibration_Status bno_stat;
+#endif
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -102,6 +106,11 @@ int main(void)
   MX_TIM8_Init();
   /* USER CODE BEGIN 2 */
   CHECK(BNO055_Init(&bno, &hi2c3, 0, NDOF))
+  #ifdef BNO055_CALIB
+  BNO055_Calibrated(&bno, &bno_stat, &bno_off);
+  #endif
+  BNO055_SetOffsets(&bno, &bno_off);
+  BNO55_SetAxis(&bno, P0_Config, P0_Sign);
   /* USER CODE END 2 */
 
   /* Infinite loop */
