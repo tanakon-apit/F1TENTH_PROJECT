@@ -48,11 +48,11 @@ uint16_t AS5600_readRaw(AS5600_Structure *as5600)
 {
 	uint16_t data;
 
-	ret = HAL_I2C_Mem_Read(as5600->hi2cx, as5600->address, AS5600_ANGLE, 1, as5600->RxBuffer, 2, 10);
+	ret = HAL_I2C_Mem_Read_DMA(as5600->hi2cx, as5600->address, AS5600_ANGLE, 1, as5600->RxBuffer, 2);
 
-	data = Data_buf[0];
+	data = as5600->RxBuffer[0];
 	data <<= 8;
-	data += Data_buf[1];
+	data += as5600->RxBuffer[1];
 	return data ;
 
 }
@@ -84,7 +84,7 @@ float AS5600_getCumulativePosition(AS5600_Structure *as5600)
 	_lastPosition = value;
 
 	uint16_t denominator = (1 << 12);
-	float cumulative_rad = (_position / (float)(denominator - 1)) * 180;
+	float cumulative_rad = (_position / (float)(denominator - 1)) * 2 * 180;
 
 	return cumulative_rad;
 }

@@ -1,5 +1,5 @@
 ../Library/src/AS5600.c:35:19:AS5600_isConnected	32	static
-../Library/src/AS5600.c:47:10:AS5600_readRaw	40	static
+../Library/src/AS5600.c:47:10:AS5600_readRaw	32	static
 ../Library/src/AS5600.c:60:7:AS5600_readAngle	24	static
 ../Library/src/AS5600.c:70:7:AS5600_getCumulativePosition	24	static
 ../Library/src/AS5600.c:92:7:AS5600_resetCumulativePosition	24	static

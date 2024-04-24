@@ -583,3 +583,17 @@ java.lang.NullPointerException: Cannot invoke "org.eclipse.cdt.managedbuilder.co
 	at org.eclipse.ui.internal.decorators.DecorationScheduler$1.queue(DecorationScheduler.java:419)
 	at org.eclipse.ui.internal.decorators.DecorationScheduler$1.run(DecorationScheduler.java:397)
 	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+
+!ENTRY org.eclipse.core.resources 4 77 2024-04-24 13:52:39.106
+!MESSAGE Invalid project description.
+!SUBENTRY 1 unknown 0 0 2024-04-24 13:52:39.106
+!MESSAGE OK
+!SUBENTRY 1 org.eclipse.core.resources 4 77 2024-04-24 13:52:39.106
+!MESSAGE C:\Users\tucha\OneDrive\Projects\Mobile Robot\F1TENTH_PROJECT\STM32G431KB_F1TENTH_FIRMWARE overlaps the location of another project: 'STM32G431KB_F1TENTH_FIRMWARE'
+
+!ENTRY org.eclipse.core.resources 4 77 2024-04-24 14:05:51.824
+!MESSAGE Invalid project description.
+!SUBENTRY 1 unknown 0 0 2024-04-24 14:05:51.825
+!MESSAGE OK
+!SUBENTRY 1 org.eclipse.core.resources 4 77 2024-04-24 14:05:51.825
+!MESSAGE C:\Users\tucha\OneDrive\Projects\Mobile Robot\F1TENTH_PROJECT\STM32G431KB_F1TENTH_FIRMWARE overlaps the location of another project: 'STM32G431KB_F1TENTH_FIRMWARE'
