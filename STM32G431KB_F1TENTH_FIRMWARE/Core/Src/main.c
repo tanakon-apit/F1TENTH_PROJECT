@@ -57,46 +57,13 @@ int8_t status = 1;
 float revCount;
 
 uint64_t timestamp;
+
+AS5600_Structure as5600 = {.hi2cx = &hi2c1, .address = AS5600_ADDRESS, .flag = HAL_BUSY};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-//HAL_StatusTypeDef ret;
-//uint8_t reg_buf[1];
-//uint8_t buf[12];
-//uint8_t Data_buf[2];
-//int16_t val;
-//float Rad;
-//float Cumulative_Rad;
-//int8_t status = 1;
-//
-////  for getAngularSpeed()
-//uint32_t _lastMeasurement = 0;
-//int16_t  _lastAngle       = 0;
-//
-////  for readAngle() and rawAngle()
-//uint16_t _offset          = 0;
-//
-////  cumulative position counter
-////  works only if the sensor is read often enough.
-//int32_t  _position        = 0;
-//int16_t  _lastPosition    = 0;
-//
-//uint16_t readReg2(uint8_t reg);
-//uint16_t readAngle();
-//int32_t getCumulativePosition();
-//float getAngularSpeed(uint8_t mode);
-//float raw2rad(uint16_t value);
-//void begin();
-//uint8_t isConnected();
-//
-//
-////Protected
-//uint8_t  _address         = AS5600_ADDRESS;
-////uint8_t  _directionPin    = 255;
-////uint8_t  _direction       = AS5600_CLOCK_WISE;
-//int      _error           = AS5600_OK;
 
 /* USER CODE END PFP */
 
@@ -141,19 +108,7 @@ int main(void)
 	MX_TIM8_Init();
 	MX_USART1_UART_Init();
 	/* USER CODE BEGIN 2 */
-	//BNO080
-	//  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_SET);
-
-	// Enable write enable latch (allow write operations)
-	//  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET);
-	//  HAL_SPI_Transmit(&hspi1, pData, Size, 100);
-	//  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_SET);
-
-	// Read status register
-	//  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET);
-	//  HAL_SPI_Receive(&hspi1, (uint8_t *)spi_buf, 1, 100);
-	//  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_SET);
-	AS5600_isConnected(&hi2c1);
+	AS5600_isConnected(&as5600);
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
@@ -164,17 +119,15 @@ int main(void)
 
 		/* USER CODE BEGIN 3 */
 
-		val = AS5600_readAngle(&hi2c1);
-		Rad = AS5600_raw2rad(val);
+		Rad = AS5600_readAngle(&as5600);
 
-		val = AS5600_getCumulativePosition(&hi2c1);
-		Cumulative_Rad = AS5600_raw2rad(val);
+		Cumulative_Rad = AS5600_getCumulativePosition(&as5600);
 
-		if(HAL_GetTick() > timestamp)
-		{
-			timestamp += 100;
-			revCount = AS5600_getAngularSpeed(&hi2c1, AS5600_MODE_RADIANS);
-		}
+//		if(HAL_GetTick() > timestamp)
+//		{
+//			timestamp += 100;
+//			revCount = AS5600_getAngularSpeed(&hi2c1, AS5600_MODE_RADIANS);
+//		}
 
 
 		debug_status = AS5600_lastError();
@@ -235,7 +188,10 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c)
+{
+	if (hi2c->Instance == as5600.hi2cx->Instance) as5600.flag = HAL_OK;
+}
 /* USER CODE END 4 */
 
 /**

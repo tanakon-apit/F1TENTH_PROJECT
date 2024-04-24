@@ -68,24 +68,28 @@ extern int16_t  _lastPosition;
 //uint8_t  _direction       = AS5600_CLOCK_WISE;
 extern int      _error;
 
-uint8_t AS5600_isConnected(I2C_HandleTypeDef* hi2cx);
+typedef struct {
+	I2C_HandleTypeDef *hi2cx;
+	uint8_t address;
+	uint8_t mode;
+	HAL_StatusTypeDef flag;
+	uint8_t RxBuffer[44];
+}AS5600_Structure;
 
-uint16_t AS5600_readReg2(I2C_HandleTypeDef* hi2cx, uint8_t reg);
+HAL_StatusTypeDef AS5600_isConnected(AS5600_Structure *as5600);
 
-uint16_t AS5600_readAngle(I2C_HandleTypeDef* hi2cx);
+uint16_t AS5600_readRaw(AS5600_Structure *as5600);
 
-int32_t AS5600_getCumulativePosition(I2C_HandleTypeDef* hi2cx);
+float AS5600_readAngle(AS5600_Structure *as5600);
 
-float AS5600_getAngularSpeed(I2C_HandleTypeDef* hi2cx, uint8_t mode);
+float AS5600_getCumulativePosition(AS5600_Structure *as5600);
 
-float AS5600_raw2rad(uint16_t value);
-
-int32_t AS5600_resetCumulativePosition(I2C_HandleTypeDef* hi2cx, int32_t position);
+float AS5600_resetCumulativePosition(AS5600_Structure *as5600, float position);
 
 int AS5600_lastError();
 
 int32_t AS5600_getRevolutions();
 
-int32_t AS5600_resetPosition(int32_t position);
+float AS5600_resetPosition(float position);
 
 #endif /* INC_AS5600_H_ */
