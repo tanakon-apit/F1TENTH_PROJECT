@@ -110,7 +110,7 @@ int main(void)
   BNO055_Calibrated(&bno, &bno_stat, &bno_off);
   #endif
   BNO055_SetOffsets(&bno, &bno_off);
-  BNO55_SetAxis(&bno, P0_Config, P0_Sign);
+  BNO55_SetAxis(&bno, P1_Config, P1_Sign);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -122,7 +122,7 @@ int main(void)
 	if (bno.flag == HAL_OK && time >= bno_time)
 	{
 		bno_time += 10;
-		BNO055_Read_DMA(&bno, 1);
+		BNO055_Read_DMA(&bno, 0);
 		bno.flag = HAL_BUSY;
 	}
     /* USER CODE END WHILE */

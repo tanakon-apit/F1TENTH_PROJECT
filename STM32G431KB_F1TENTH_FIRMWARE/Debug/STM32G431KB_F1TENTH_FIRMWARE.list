@@ -37,15 +37,15 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  16 .debug_macro  0001e79d  00000000  00000000  000275c1  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   0001af48  00000000  00000000  00045d5e  2**0
+ 17 .debug_line   0001af27  00000000  00000000  00045d5e  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    000c62e0  00000000  00000000  00060ca6  2**0
+ 18 .debug_str    000c62d5  00000000  00000000  00060c85  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000043  00000000  00000000  00126f86  2**0
+ 19 .comment      00000043  00000000  00000000  00126f5a  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  00005694  00000000  00000000  00126fcc  2**2
+ 20 .debug_frame  00005694  00000000  00000000  00126fa0  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 21 .debug_line_str 00000094  00000000  00000000  0012c660  2**0
+ 21 .debug_line_str 00000089  00000000  00000000  0012c634  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -1765,9 +1765,9 @@ int main(void)
  8001182:	4914      	ldr	r1, [pc, #80]	@ (80011d4 <main+0xa8>)
  8001184:	4812      	ldr	r0, [pc, #72]	@ (80011d0 <main+0xa4>)
  8001186:	f007 f997 	bl	80084b8 <BNO055_SetOffsets>
-  BNO55_SetAxis(&bno, P0_Config, P0_Sign);
- 800118a:	2204      	movs	r2, #4
- 800118c:	2121      	movs	r1, #33	@ 0x21
+  BNO55_SetAxis(&bno, P1_Config, P1_Sign);
+ 800118a:	2200      	movs	r2, #0
+ 800118c:	2124      	movs	r1, #36	@ 0x24
  800118e:	4810      	ldr	r0, [pc, #64]	@ (80011d0 <main+0xa4>)
  8001190:	f007 fa45 	bl	800861e <BNO55_SetAxis>
   /* USER CODE END 2 */
@@ -1798,8 +1798,8 @@ int main(void)
  80011b4:	687b      	ldr	r3, [r7, #4]
  80011b6:	330a      	adds	r3, #10
  80011b8:	607b      	str	r3, [r7, #4]
-		BNO055_Read_DMA(&bno, 1);
- 80011ba:	2101      	movs	r1, #1
+		BNO055_Read_DMA(&bno, 0);
+ 80011ba:	2100      	movs	r1, #0
  80011bc:	4804      	ldr	r0, [pc, #16]	@ (80011d0 <main+0xa4>)
  80011be:	f006 fd8f 	bl	8007ce0 <BNO055_Read_DMA>
 		bno.flag = HAL_BUSY;
