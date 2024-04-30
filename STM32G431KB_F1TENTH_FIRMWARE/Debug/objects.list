@@ -30,6 +30,7 @@
 "./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim_ex.o"
 "./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart.o"
 "./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart_ex.o"
+"./Library/src/AS5600.o"
 "./Library/src/BNO055.o"
 "./Library/src/Controller.o"
 "./Library/src/DC_Motor.o"

@@ -29,6 +29,7 @@
 #include "Controller.h"
 #include "Cytron_Motor_260rpm_250W.h"
 #include "BNO055.h"
+#include "AS5600.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -54,6 +55,8 @@ BNO055_Offsets bno_off;
 #ifdef BNO055_CALIB_ON
 BNO055_Calibration_Status bno_stat;
 #endif
+
+AS5600_Structure as5600;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -111,6 +114,7 @@ int main(void)
   #endif
   BNO055_SetOffsets(&bno, &bno_off);
   BNO55_SetAxis(&bno, P1_Config, P1_Sign);
+  CHECK(AS5600_Init(&as5600, &hi2c1, Radian))
   /* USER CODE END 2 */
 
   /* Infinite loop */

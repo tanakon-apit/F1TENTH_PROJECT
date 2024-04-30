@@ -1,0 +1,4 @@
+../Library/src/AS5600.c:10:19:AS5600_Init	3
+../Library/src/AS5600.c:26:7:AS5600_Read_Absolute_DMA	1
+../Library/src/AS5600.c:35:8:AS5600_Read_Increment_DMA	3
+../Library/src/AS5600.c:51:6:AS5600_Reset_Increment	1
