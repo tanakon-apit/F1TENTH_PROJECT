@@ -105,7 +105,6 @@ int main(void)
   MX_TIM3_Init();
   MX_TIM4_Init();
   MX_I2C3_Init();
-  MX_TIM2_Init();
   MX_TIM8_Init();
   /* USER CODE BEGIN 2 */
   CHECK(BNO055_Init(&bno, &hi2c3, 0, NDOF))

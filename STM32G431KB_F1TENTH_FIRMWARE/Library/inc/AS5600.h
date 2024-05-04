@@ -27,15 +27,18 @@ typedef struct {
 	I2C_HandleTypeDef *hi2cx;
 	HAL_StatusTypeDef flag;
 	uint8_t RxBuffer[2];
+	int16_t prev_raw_ang;
 	float gain;
-	double ang;
+	float ang;
+	float abs_ang;
+	float inc_ang;
 }AS5600_Structure;
 
 HAL_StatusTypeDef AS5600_Init(AS5600_Structure *as5600, I2C_HandleTypeDef *hi2cx, Angle_Unit unit);
 
-float AS5600_Read_Absolute_DMA(AS5600_Structure *as5600);
+void AS5600_Read_Absolute_DMA(AS5600_Structure *as5600);
 
-double AS5600_Read_Increment_DMA(AS5600_Structure *as5600);
+void AS5600_Read_Increment_DMA(AS5600_Structure *as5600);
 
 void AS5600_Reset_Increment(AS5600_Structure *as5600);
 
