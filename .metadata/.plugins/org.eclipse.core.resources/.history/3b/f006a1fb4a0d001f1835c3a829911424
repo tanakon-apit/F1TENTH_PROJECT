@@ -29,7 +29,6 @@ typedef struct {
 	uint8_t RxBuffer[2];
 	int16_t prev_raw_ang;
 	float gain;
-	float offset;
 	float ang;
 	float abs_ang;
 	float inc_ang;
