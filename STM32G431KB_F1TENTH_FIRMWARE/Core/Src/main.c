@@ -109,6 +109,7 @@ int main(void)
   MX_TIM4_Init();
   MX_TIM8_Init();
   MX_USART1_UART_Init();
+  MX_I2C3_Init();
   /* USER CODE BEGIN 2 */
 	AS5600_isConnected(&as5600);
 	AS5600_resetCumulativePosition(&as5600, 0.0);
