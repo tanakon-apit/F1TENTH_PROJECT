@@ -26,9 +26,10 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "Controller.h"
+#include "Cytron_Motor_260rpm_250W.h"
 #include "BNO055.h"
 #include "AS5600.h"
-#include "RC.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/

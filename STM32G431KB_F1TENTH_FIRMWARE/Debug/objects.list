@@ -34,3 +34,4 @@
 "./Library/src/BNO055.o"
 "./Library/src/Controller.o"
 "./Library/src/DC_Motor.o"
+"./Library/src/RC.o"
