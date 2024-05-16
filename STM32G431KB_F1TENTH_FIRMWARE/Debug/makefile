@@ -62,8 +62,8 @@ all: main-build
 main-build: STM32G431KB_F1TENTH_FIRMWARE.elf secondary-outputs
 
 # Tool invocations
-STM32G431KB_F1TENTH_FIRMWARE.elf STM32G431KB_F1TENTH_FIRMWARE.map: $(OBJS) $(USER_OBJS) C:\Users\kwan2\Documents\3-2\ FIBO\FRA532\ Mobile\ Robot\F1TENTH_PROJECT\STM32G431KB_F1TENTH_FIRMWARE\STM32G431KBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "STM32G431KB_F1TENTH_FIRMWARE.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\kwan2\Documents\3-2 FIBO\FRA532 Mobile Robot\F1TENTH_PROJECT\STM32G431KB_F1TENTH_FIRMWARE\STM32G431KBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="STM32G431KB_F1TENTH_FIRMWARE.map" -Wl,--gc-sections -static -Wl,--no-warn-rwx-segment --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+STM32G431KB_F1TENTH_FIRMWARE.elf STM32G431KB_F1TENTH_FIRMWARE.map: $(OBJS) $(USER_OBJS) C:\Users\tucha\OneDrive\Projects\Mobile\ Robot\F1TENTH_PROJECT\STM32G431KB_F1TENTH_FIRMWARE\STM32G431KBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "STM32G431KB_F1TENTH_FIRMWARE.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\tucha\OneDrive\Projects\Mobile Robot\F1TENTH_PROJECT\STM32G431KB_F1TENTH_FIRMWARE\STM32G431KBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="STM32G431KB_F1TENTH_FIRMWARE.map" -Wl,--gc-sections -static -Wl,--no-warn-rwx-segment --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

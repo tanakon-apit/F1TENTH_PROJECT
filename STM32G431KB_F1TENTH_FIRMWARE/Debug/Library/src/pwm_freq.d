@@ -1,5 +1,5 @@
 Library/src/pwm_freq.o: ../Library/src/pwm_freq.c \
- C:/Users/kwan2/Documents/3-2\ FIBO/FRA532\ Mobile\ Robot/F1TENTH_PROJECT/STM32G431KB_F1TENTH_FIRMWARE/Library/inc/pwm_freq.h \
+ C:/Users/tucha/OneDrive/Projects/Mobile\ Robot/F1TENTH_PROJECT/STM32G431KB_F1TENTH_FIRMWARE/Library/inc/pwm_freq.h \
  ../Core/Inc/main.h ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h \
  ../Core/Inc/stm32g4xx_hal_conf.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h \
@@ -33,7 +33,7 @@ Library/src/pwm_freq.o: ../Library/src/pwm_freq.c \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h
-C:/Users/kwan2/Documents/3-2\ FIBO/FRA532\ Mobile\ Robot/F1TENTH_PROJECT/STM32G431KB_F1TENTH_FIRMWARE/Library/inc/pwm_freq.h:
+C:/Users/tucha/OneDrive/Projects/Mobile\ Robot/F1TENTH_PROJECT/STM32G431KB_F1TENTH_FIRMWARE/Library/inc/pwm_freq.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h:
 ../Core/Inc/stm32g4xx_hal_conf.h:

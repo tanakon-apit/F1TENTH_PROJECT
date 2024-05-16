@@ -1,5 +1,5 @@
 Library/src/Servo.o: ../Library/src/Servo.c \
- C:/Users/kwan2/Documents/3-2\ FIBO/FRA532\ Mobile\ Robot/F1TENTH_PROJECT/STM32G431KB_F1TENTH_FIRMWARE/Library/inc/Servo.h \
+ C:/Users/tucha/OneDrive/Projects/Mobile\ Robot/F1TENTH_PROJECT/STM32G431KB_F1TENTH_FIRMWARE/Library/inc/Servo.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h \
  ../Core/Inc/stm32g4xx_hal_conf.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h \
@@ -33,7 +33,7 @@ Library/src/Servo.o: ../Library/src/Servo.c \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h
-C:/Users/kwan2/Documents/3-2\ FIBO/FRA532\ Mobile\ Robot/F1TENTH_PROJECT/STM32G431KB_F1TENTH_FIRMWARE/Library/inc/Servo.h:
+C:/Users/tucha/OneDrive/Projects/Mobile\ Robot/F1TENTH_PROJECT/STM32G431KB_F1TENTH_FIRMWARE/Library/inc/Servo.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h:
 ../Core/Inc/stm32g4xx_hal_conf.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h:

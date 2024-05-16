@@ -52,13 +52,19 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-Servo_Structure S1 = {
-		.htimx = &htim16,
+Servo_Structure Drive = {
+		.htimx = &htim8,
 		.channelx = TIM_CHANNEL_1
 };
 
+Servo_Structure Steer = {
+		.htimx = &htim8,
+		.channelx = TIM_CHANNEL_2
+};
+
 //float pwm = 1.36;
-int32_t degree = 0;
+int32_t degree = 1350;
+int32_t speed = 1500;
 
 /* USER CODE END PV */
 
@@ -110,13 +116,17 @@ int main(void)
   MX_SPI1_Init();
   MX_TIM15_Init();
   MX_TIM16_Init();
+  MX_TIM8_Init();
   /* USER CODE BEGIN 2 */
 
 //  HAL_TIM_Base_Start(&htim16); // Start Timer
 //  HAL_TIMEx_PWMN_Start(&htim16, TIM_CHANNEL_1); // Start PWM Mode
 
-  Servo_Init(&S1, 170*1.0e6, True);
-  RC_Set_Input_Range(&S1, -90, 90);
+  Servo_Init(&Drive, 170*1.0e6, True);
+  RC_Set_Input_Range(&Drive, 500, 2500);
+
+  Servo_Init(&Steer, 170*1.0e6, True);
+  RC_Set_Input_Range(&Steer, 500, 2500);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -126,7 +136,9 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  RC_Signal_Write(&S1, degree);
+	  RC_Signal_Write(&Steer, degree);
+	  RC_Signal_Write(&Drive, speed);
+	  HAL_Delay(20);
 
 //	  HAL_Delay(1000);
 
