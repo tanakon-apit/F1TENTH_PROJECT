@@ -1,3 +1,0 @@
-../Library/src/RC.c:10:9:RC_Init	3
-../Library/src/RC.c:26:6:RC_Set_Input_Range	1
-../Library/src/RC.c:35:6:RC_Write	6

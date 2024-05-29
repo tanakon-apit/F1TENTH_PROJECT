@@ -1,4 +1,0 @@
-../Library/src/DC_Motor.c:12:6:DC_MOTOR_IM_Init	1
-../Library/src/DC_Motor.c:28:6:DC_MOTOR_FM_Init	1
-../Library/src/DC_Motor.c:44:7:DC_MOTOR_IM_Compute	3
-../Library/src/DC_Motor.c:57:7:DC_MOTOR_FM_Compute	3

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;STM32L432KC_F1TENTH_FIRMWARE/Command.txt&apos; to &apos;README.txt&apos;" description="Rename resource &apos;Command.txt&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Command.txt" name="README.txt" stamp="1715868929016" updateReferences="true"/>
+</session>

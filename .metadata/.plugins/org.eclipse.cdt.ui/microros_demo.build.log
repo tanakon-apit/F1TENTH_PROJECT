@@ -1,0 +1,19 @@
+03:50:22 **** Incremental Build of configuration Debug for project microros_demo ****
+make -j16 all 
+docker pull microros/micro_ros_static_library_builder:iron && docker run --rm -v /home/tanakon/Desktop/F1TENTH_PROJECT/microros_demo:/project --env MICROROS_LIBRARY_FOLDER=micro_ros_stm32cubemx_utils/microros_static_library_ide microros/micro_ros_static_library_builder:iron
+iron: Pulling from microros/micro_ros_static_library_builder
+Digest: sha256:6f1ae285070116c0d351a30563f2ae3ad7b595cab4b72ee2e130f3c2cafe6098
+Status: Image is up to date for microros/micro_ros_static_library_builder:iron
+docker.io/microros/micro_ros_static_library_builder:iron
+dos2unix: converting file /project/micro_ros_stm32cubemx_utils/microros_static_library_ide/library_generation/library_generation.sh to Unix format...
+micro-ROS library found. Skipping...
+Delete micro_ros_stm32cubemx_utils/microros_static_library_ide/libmicroros/ for rebuild.
+ 
+arm-none-eabi-size  microros_demo.elf 
+   text	   data	    bss	    dec	    hex	filename
+ 104384	    736	  50512	 155632	  25ff0	microros_demo.elf
+Finished building: default.size.stdout
+ 
+
+03:50:26 Build Finished. 0 errors, 0 warnings. (took 3s.339ms)
+
