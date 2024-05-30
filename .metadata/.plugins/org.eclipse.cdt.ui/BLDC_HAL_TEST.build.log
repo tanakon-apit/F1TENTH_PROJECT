@@ -1,4 +1,4 @@
-12:57:26 **** Incremental Build of configuration Debug for project BLDC_HAL_TEST ****
+19:31:24 **** Incremental Build of configuration Debug for project BLDC_HAL_TEST ****
 make -j16 all 
 arm-none-eabi-size  BLDC_HAL_TEST.elf 
    text	   data	    bss	    dec	    hex	filename
@@ -6,5 +6,5 @@ arm-none-eabi-size  BLDC_HAL_TEST.elf
 Finished building: default.size.stdout
  
 
-12:57:26 Build Finished. 0 errors, 0 warnings. (took 289ms)
+19:31:24 Build Finished. 0 errors, 0 warnings. (took 295ms)
 

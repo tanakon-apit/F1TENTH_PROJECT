@@ -52,6 +52,9 @@ default.size.stdout \
 OBJDUMP_LIST += \
 BLDC_HAL_TEST.list \
 
+OBJCOPY_BIN += \
+BLDC_HAL_TEST.bin \
+
 
 # All Target
 all: main-build
@@ -75,12 +78,17 @@ BLDC_HAL_TEST.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
+BLDC_HAL_TEST.bin: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "BLDC_HAL_TEST.bin"
+	@echo 'Finished building: $@'
+	@echo ' '
+
 # Other Targets
 clean:
-	-$(RM) BLDC_HAL_TEST.elf BLDC_HAL_TEST.list BLDC_HAL_TEST.map default.size.stdout
+	-$(RM) BLDC_HAL_TEST.bin BLDC_HAL_TEST.elf BLDC_HAL_TEST.list BLDC_HAL_TEST.map default.size.stdout
 	-@echo ' '
 
-secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)
+secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST) $(OBJCOPY_BIN)
 
 fail-specified-linker-script-missing:
 	@echo 'Error: Cannot find the specified linker script. Check the linker settings in the build configuration.'

@@ -58,6 +58,9 @@ default.size.stdout \
 OBJDUMP_LIST += \
 STM32L432KC_F1TENTH_FIRMWARE.list \
 
+OBJCOPY_BIN += \
+STM32L432KC_F1TENTH_FIRMWARE.bin \
+
 
 # All Target
 all:
@@ -82,16 +85,21 @@ STM32L432KC_F1TENTH_FIRMWARE.list: $(EXECUTABLES) makefile objects.list $(OPTION
 	@echo 'Finished building: $@'
 	@echo ' '
 
+STM32L432KC_F1TENTH_FIRMWARE.bin: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "STM32L432KC_F1TENTH_FIRMWARE.bin"
+	@echo 'Finished building: $@'
+	@echo ' '
+
 # Other Targets
 clean:
-	-$(RM) STM32L432KC_F1TENTH_FIRMWARE.elf STM32L432KC_F1TENTH_FIRMWARE.list STM32L432KC_F1TENTH_FIRMWARE.map default.size.stdout
+	-$(RM) STM32L432KC_F1TENTH_FIRMWARE.bin STM32L432KC_F1TENTH_FIRMWARE.elf STM32L432KC_F1TENTH_FIRMWARE.list STM32L432KC_F1TENTH_FIRMWARE.map default.size.stdout
 	-@echo ' '
 
 pre-build:
-	docker pull microros/micro_ros_static_library_builder:humble && docker run --rm -v /home/tanakon/Desktop/F1TENTH_PROJECT/STM32L432KC_F1TENTH_FIRMWARE:/project --env MICROROS_LIBRARY_FOLDER=micro_ros_stm32cubemx_utils/microros_static_library_ide microros/micro_ros_static_library_builder:humble
+	docker pull microros/micro_ros_static_library_builder:foxy && docker run --rm -v /home/tanakon/Desktop/F1TENTH_PROJECT/STM32L432KC_F1TENTH_FIRMWARE:/project --env MICROROS_LIBRARY_FOLDER=micro_ros_stm32cubemx_utils/microros_static_library_ide microros/micro_ros_static_library_builder:foxy
 	-@echo ' '
 
-secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)
+secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST) $(OBJCOPY_BIN)
 
 fail-specified-linker-script-missing:
 	@echo 'Error: Cannot find the specified linker script. Check the linker settings in the build configuration.'

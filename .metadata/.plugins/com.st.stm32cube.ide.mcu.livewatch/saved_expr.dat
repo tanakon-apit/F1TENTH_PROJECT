@@ -6,3 +6,4 @@ bno_flag
 cmd_msg
 servo_cmd
 bldc_cmd
+counter

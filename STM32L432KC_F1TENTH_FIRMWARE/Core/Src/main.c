@@ -43,6 +43,13 @@ typedef enum {
 	backward_2,
 	brake
 } direction_state;
+
+typedef struct {
+	int16_t prev_counter;
+	double gain;
+	double unwrap_pos;
+	double pos;
+}encoder_counter;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -63,6 +70,12 @@ typedef enum {
 float servo_cmd = 0;
 float bldc_cmd = 0;
 direction_state state = brake;
+encoder_counter enc = {
+		.prev_counter = 0.0,
+		.gain = M_PI_2,
+		.unwrap_pos = 0.0,
+		.pos = 0.0
+};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -126,7 +139,15 @@ void enc_timer_callback(rcl_timer_t * timer, int64_t last_call_time)
 		}
 		RC_Write(&servo, ang2rc(servo_cmd));
 
-		enc_msg.data.data[0] = __HAL_TIM_GET_COUNTER(&htim1);
+		int16_t counter = __HAL_TIM_GET_COUNTER(&htim1);
+		int32_t delta_counter = counter - enc.prev_counter;
+		enc.prev_counter = counter;
+
+		if (delta_counter < -32768) enc.pos += (65535.0 * enc.gain);
+		else if (delta_counter > 32768) enc.pos -= (65535.0 * enc.gain);
+		enc.unwrap_pos = counter * enc.gain; //(counter * enc.gain) + enc.pos;
+
+		enc_msg.data.data[0] = enc.unwrap_pos;
 #endif
 		if (!isfirst_callback) RCSOFTCHECK(rcl_publish(&enc_publisher, &enc_msg, NULL))
 		else isfirst_callback = !isfirst_callback;
@@ -274,18 +295,18 @@ int main(void)
   MX_GPIO_Init();
   MX_DMA_Init();
   MX_USART2_UART_Init();
-  MX_I2C3_Init();
   MX_TIM1_Init();
   MX_TIM2_Init();
   MX_TIM15_Init();
+  MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
 #ifdef SENSOR_ON
-  HALCHECK(BNO055_Init(&bno, &hi2c3, 0, NDOF))
+  HALCHECK(BNO055_Init(&bno, &hi2c1, 0, NDOF))
 #ifdef BNO_CALIB_ON
   BNO055_Calibrated(&bno, &bno_stat, &bno_off);
 #endif
   BNO055_SetOffsets(&bno, &bno_off);
-  BNO055_SetAxis(&bno, P1_Config, P1_Sign);
+  BNO055_SetAxis(&bno, P0_Config, P0_Sign);
   HALCHECK(RC_Init(&servo, &htim15, TIM_CHANNEL_1, CPU_FREQ, true))
   HALCHECK(RC_Init(&bldc, &htim15, TIM_CHANNEL_2, CPU_FREQ, false))
   RC_Set_Input_Range(&servo, 0.5, 2.5);

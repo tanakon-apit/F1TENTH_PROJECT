@@ -104,9 +104,9 @@ void BNO055_Read(BNO055_Structure *bno, Vector_Type type)
 			bno->accel.y = ((double)y) / 100.0;
 			bno->accel.z = ((double)z) / 100.0;
 		case GYROSCOPE:
-			bno->gyro.x = ((double)x) / 16.0;
-			bno->gyro.y = ((double)y) / 16.0;
-			bno->gyro.z = ((double)z) / 16.0;
+			bno->gyro.x = ((double)x) * M_PI / (16.0 * 180.0);
+			bno->gyro.y = ((double)y) * M_PI / (16.0 * 180.0);
+			bno->gyro.z = ((double)z) * M_PI / (16.0 * 180.0);
 			break;
 		case MAGNETOMETER:
 			bno->mag.x = ((double)x) / 16.0;
@@ -114,9 +114,9 @@ void BNO055_Read(BNO055_Structure *bno, Vector_Type type)
 			bno->mag.z = ((double)z) / 16.0;
 			break;
 		case EULER:
-			bno->euler.yaw = ((double)x) / 16.0;
-			bno->euler.roll = ((double)y) / 16.0;
-			bno->euler.pitch = ((double)z) / 16.0;
+			bno->euler.yaw = ((double)x) * M_PI / (16.0 * 180.0);
+			bno->euler.roll = ((double)y) * M_PI / (16.0 * 180.0);
+			bno->euler.pitch = ((double)z) * M_PI / (16.0 * 180.0);
 			break;
 		case LINEARACCEL:
 			bno->lin_acc.x = ((double)x) / 100.0;
@@ -135,10 +135,10 @@ void BNO055_Read(BNO055_Structure *bno, Vector_Type type)
 
 		int16_t x, y, z, w = 0;
 
-		x  = ((int16_t) rxbuffer[0]) | (((int16_t) rxbuffer[1]) << 8);
-		y  = ((int16_t) rxbuffer[2]) | (((int16_t) rxbuffer[3]) << 8);
-		z  = ((int16_t) rxbuffer[4]) | (((int16_t) rxbuffer[5]) << 8);
-		w  = ((int16_t) rxbuffer[6]) | (((int16_t) rxbuffer[7]) << 8);
+		w  = ((int16_t) rxbuffer[0]) | (((int16_t) rxbuffer[1]) << 8);
+		x  = ((int16_t) rxbuffer[2]) | (((int16_t) rxbuffer[3]) << 8);
+		y  = ((int16_t) rxbuffer[4]) | (((int16_t) rxbuffer[5]) << 8);
+		z  = ((int16_t) rxbuffer[6]) | (((int16_t) rxbuffer[7]) << 8);
 
 		const double scale = (1.0 / (1 << 14));
 		bno->quat.x = x * scale;
@@ -167,18 +167,18 @@ void BNO055_Read_DMA(BNO055_Structure *bno, uint8_t fast_mode)
 	bno->mag.y = ((double) bno->DataBuffer[4].i16) / 16.0;
 	bno->mag.z = ((double) bno->DataBuffer[5].i16) / 16.0;
 
-	bno->gyro.x = ((double) bno->DataBuffer[6].i16) / 16.0;
-	bno->gyro.y = ((double) bno->DataBuffer[7].i16) / 16.0;
-	bno->gyro.z = ((double) bno->DataBuffer[8].i16) / 16.0;
+	bno->gyro.x = ((double) bno->DataBuffer[6].i16) * M_PI / (16.0 * 180.0);
+	bno->gyro.y = ((double) bno->DataBuffer[7].i16) * M_PI / (16.0 * 180.0);
+	bno->gyro.z = ((double) bno->DataBuffer[8].i16) * M_PI / (16.0 * 180.0);
 
-	bno->euler.yaw = ((double) bno->DataBuffer[9].i16) / 16.0;
-	bno->euler.roll = ((double) bno->DataBuffer[10].i16) / 16.0;
-	bno->euler.pitch = ((double) bno->DataBuffer[11].i16) / 16.0;
+	bno->euler.yaw = ((double) bno->DataBuffer[9].i16) * M_PI / (16.0 * 180.0);
+	bno->euler.roll = ((double) bno->DataBuffer[10].i16) * M_PI / (16.0 * 180.0);
+	bno->euler.pitch = ((double) bno->DataBuffer[11].i16) * M_PI / (16.0 * 180.0);
 
-	bno->quat.x = bno->DataBuffer[12].i16 * scale;
-	bno->quat.y = bno->DataBuffer[13].i16 * scale;
-	bno->quat.z = bno->DataBuffer[14].i16 * scale;
-	bno->quat.w = bno->DataBuffer[15].i16 * scale;
+	bno->quat.w = bno->DataBuffer[12].i16 * scale;
+	bno->quat.x = bno->DataBuffer[13].i16 * scale;
+	bno->quat.y = bno->DataBuffer[14].i16 * scale;
+	bno->quat.z = bno->DataBuffer[15].i16 * scale;
 
 	if (!fast_mode) {
 

@@ -9,6 +9,7 @@
 #define INC_BNO055_H_
 
 #include "stm32l4xx_hal.h"
+#include "math.h"
 
 #ifndef INC_DATA_CONVERT_H_
 	typedef union {

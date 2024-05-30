@@ -1,12 +1,12 @@
 LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/arch=x86_64
 LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/name=Local
 LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/os=win32
-configDescList=org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:microros_demo Debug,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:BLDC_HAL_TEST Debug,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32L432KC_F1TENTH_FIRMWARE
+configDescList=org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:BLDC_HAL_TEST Debug,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32L432KC_F1TENTH_FIRMWARE
 eclipse.preferences.version=1
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:BLDC_HAL_TEST\ Debug/activeLaunchMode=run
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32G431KB_F1TENTH_FIRMWARE\ Debug/activeLaunchMode=run
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32G431KB_F1TENTH_FIRMWARE\ Debug/activeLaunchTarget=null\:---
-org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32L432KC_F1TENTH_FIRMWARE/activeLaunchMode=debug
+org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32L432KC_F1TENTH_FIRMWARE/activeLaunchMode=run
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:STM32L432KC_F1TENTH_FIRMWARE/activeLaunchTarget=null\:---
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:microros_demo\ Debug/activeLaunchMode=run
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:microros_demo\ Debug/activeLaunchTarget=null\:---

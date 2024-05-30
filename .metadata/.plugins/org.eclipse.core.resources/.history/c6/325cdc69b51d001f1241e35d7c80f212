@@ -1,0 +1,14 @@
+# pack-refs with: peeled fully-peeled sorted 
+63926c47f971cb04fe1f999f839bace259f185de refs/remotes/origin/feature/make_build
+887cc8feca5eab905656b4bf6ff41c128ddd78a9 refs/remotes/origin/foxy
+85dad5dbd65d030cdbd9b959a1d5e5b971573fb8 refs/remotes/origin/galactic
+78cd506ba72c27a33c6b3ec9f2b9a9c43c27e2fa refs/remotes/origin/humble
+0dbe8b656cf48ef6b8194f047029711fc09cc9bb refs/remotes/origin/iron
+513d43c259a235c370a68ffe43829030005654b1 refs/remotes/origin/rolling
+240c3f3fee4fc0e401e311922374fba1d901d37e refs/tags/1.0.0
+61afb1d20f57cc891d4a5b57a2f8c0acf4f71186 refs/tags/2.0.0
+fc4d4d9d2dba198bafc0446ce1b145304fd34f4e refs/tags/3.0.0
+e26bd3de437ef87ef831f7f1327ce6796ee7beb3 refs/tags/3.0.1
+2947e2ca87bd9ed0de4a34a41942c7e83dc4805b refs/tags/4.0.0
+37c09ab05d351707f9130e5edf39b965678a081d refs/tags/4.1.0
+e71aaf147b88a03bdff082e36d180bfa5557a4b3 refs/tags/5.0.0
