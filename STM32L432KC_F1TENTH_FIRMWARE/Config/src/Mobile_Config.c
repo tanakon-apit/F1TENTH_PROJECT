@@ -48,4 +48,6 @@ BNO055_Calibration_Status bno_stat;
 RC_Structure servo;
 RC_Structure bldc;
 
+PID_Structure pid;
+
 

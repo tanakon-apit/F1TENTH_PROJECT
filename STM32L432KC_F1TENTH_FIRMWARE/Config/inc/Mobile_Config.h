@@ -40,6 +40,7 @@ extern std_msgs__msg__Float64MultiArray cmd_msg;
 #include "AS5600.h"
 #include "BNO055.h"
 #include "RC.h"
+#include "Controller.h"
 
 #define BNO_CALIB_OFF
 
@@ -68,5 +69,7 @@ extern BNO055_Calibration_Status bno_stat;
 
 extern RC_Structure servo;
 extern RC_Structure bldc;
+
+extern PID_Structure pid;
 
 #endif /* INC_MOBILE_CONFIG_H_ */

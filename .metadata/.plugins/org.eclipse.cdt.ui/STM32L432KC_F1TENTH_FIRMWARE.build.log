@@ -1,4 +1,4 @@
-15:38:56 **** Incremental Build of configuration Debug for project STM32L432KC_F1TENTH_FIRMWARE ****
+07:48:04 **** Incremental Build of configuration Debug for project STM32L432KC_F1TENTH_FIRMWARE ****
 make -j16 all 
 docker pull microros/micro_ros_static_library_builder:foxy && docker run --rm -v /home/tanakon/Desktop/F1TENTH_PROJECT/STM32L432KC_F1TENTH_FIRMWARE:/project --env MICROROS_LIBRARY_FOLDER=micro_ros_stm32cubemx_utils/microros_static_library_ide microros/micro_ros_static_library_builder:foxy
 foxy: Pulling from microros/micro_ros_static_library_builder
@@ -17,7 +17,7 @@ arm-none-eabi-size  STM32L432KC_F1TENTH_FIRMWARE.elf
 arm-none-eabi-objdump -h -S STM32L432KC_F1TENTH_FIRMWARE.elf  > "STM32L432KC_F1TENTH_FIRMWARE.list"
 arm-none-eabi-objcopy  -O binary STM32L432KC_F1TENTH_FIRMWARE.elf  "STM32L432KC_F1TENTH_FIRMWARE.bin"
    text	   data	    bss	    dec	    hex	filename
- 116648	    360	  50912	 167920	  28ff0	STM32L432KC_F1TENTH_FIRMWARE.elf
+ 112940	    340	  50864	 164144	  28130	STM32L432KC_F1TENTH_FIRMWARE.elf
 Finished building: default.size.stdout
  
 Finished building: STM32L432KC_F1TENTH_FIRMWARE.bin
@@ -25,5 +25,5 @@ Finished building: STM32L432KC_F1TENTH_FIRMWARE.bin
 Finished building: STM32L432KC_F1TENTH_FIRMWARE.list
  
 
-15:39:03 Build Finished. 0 errors, 0 warnings. (took 6s.509ms)
+07:48:09 Build Finished. 0 errors, 0 warnings. (took 5s.144ms)
 

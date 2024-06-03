@@ -7,18 +7,21 @@
 C_SRCS += \
 ../Library/src/AS5600.c \
 ../Library/src/BNO055.c \
+../Library/src/Controller.c \
 ../Library/src/RC.c \
 ../Library/src/Tamiya.c 
 
 OBJS += \
 ./Library/src/AS5600.o \
 ./Library/src/BNO055.o \
+./Library/src/Controller.o \
 ./Library/src/RC.o \
 ./Library/src/Tamiya.o 
 
 C_DEPS += \
 ./Library/src/AS5600.d \
 ./Library/src/BNO055.d \
+./Library/src/Controller.d \
 ./Library/src/RC.d \
 ./Library/src/Tamiya.d 
 
@@ -30,7 +33,7 @@ Library/src/%.o Library/src/%.su Library/src/%.cyclo: ../Library/src/%.c Library
 clean: clean-Library-2f-src
 
 clean-Library-2f-src:
-	-$(RM) ./Library/src/AS5600.cyclo ./Library/src/AS5600.d ./Library/src/AS5600.o ./Library/src/AS5600.su ./Library/src/BNO055.cyclo ./Library/src/BNO055.d ./Library/src/BNO055.o ./Library/src/BNO055.su ./Library/src/RC.cyclo ./Library/src/RC.d ./Library/src/RC.o ./Library/src/RC.su ./Library/src/Tamiya.cyclo ./Library/src/Tamiya.d ./Library/src/Tamiya.o ./Library/src/Tamiya.su
+	-$(RM) ./Library/src/AS5600.cyclo ./Library/src/AS5600.d ./Library/src/AS5600.o ./Library/src/AS5600.su ./Library/src/BNO055.cyclo ./Library/src/BNO055.d ./Library/src/BNO055.o ./Library/src/BNO055.su ./Library/src/Controller.cyclo ./Library/src/Controller.d ./Library/src/Controller.o ./Library/src/Controller.su ./Library/src/RC.cyclo ./Library/src/RC.d ./Library/src/RC.o ./Library/src/RC.su ./Library/src/Tamiya.cyclo ./Library/src/Tamiya.d ./Library/src/Tamiya.o ./Library/src/Tamiya.su
 
 .PHONY: clean-Library-2f-src
 

@@ -62,6 +62,9 @@ typedef struct {
 #define HALCHECK(fn) while(fn != HAL_OK) HAL_Delay(100);
 #define RCCHECK(fn) { rcl_ret_t temp_rc = fn; if((temp_rc != RCL_RET_OK)){Error_Handler()}}
 #define RCSOFTCHECK(fn) { rcl_ret_t temp_rc = fn; if((temp_rc != RCL_RET_OK)){}}
+#define KP 0.1
+#define KI 0.02
+#define KD 0
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -96,7 +99,6 @@ void enc_timer_callback(rcl_timer_t * timer, int64_t last_call_time);
 void imu_timer_callback(rcl_timer_t * timer, int64_t last_call_time);
 void subscription_callback(const void * msgin);
 
-float vel2rc(float speed);
 float ang2rc(float ang);
 /* USER CODE END PFP */
 
@@ -110,34 +112,6 @@ void enc_timer_callback(rcl_timer_t * timer, int64_t last_call_time)
 	{
 
 #ifdef SENSOR_ON
-		switch (state)
-		{
-		case forward:
-			if (bldc_cmd > 0) RC_Write(&bldc, vel2rc(bldc_cmd));
-			else {
-				RC_Write(&bldc, vel2rc(0));
-				state = brake;
-			}
-			break;
-		case brake:
-			RC_Write(&bldc, vel2rc(bldc_cmd));
-			if (bldc_cmd > 0) state = forward;
-			else if (bldc_cmd < 0) state = backward_1;
-			break;
-		case backward_1:
-			RC_Write(&bldc, vel2rc(0));
-			if (bldc_cmd < 0) state = backward_2;
-			else state = brake;
-			break;
-		case backward_2:
-			if (bldc_cmd < 0) RC_Write(&bldc, vel2rc(bldc_cmd));
-			else {
-				RC_Write(&bldc, vel2rc(0));
-				state = brake;
-			}
-			break;
-		}
-		RC_Write(&servo, ang2rc(servo_cmd));
 
 		int16_t counter = __HAL_TIM_GET_COUNTER(&htim1);
 		int32_t delta_counter = counter - enc.prev_counter;
@@ -145,9 +119,68 @@ void enc_timer_callback(rcl_timer_t * timer, int64_t last_call_time)
 
 		if (delta_counter < -32768) enc.pos += (65535.0 * enc.gain);
 		else if (delta_counter > 32768) enc.pos -= (65535.0 * enc.gain);
-		enc.unwrap_pos = counter * enc.gain; //(counter * enc.gain) + enc.pos;
+
+		float speed = ((counter * enc.gain) + enc.pos - enc.unwrap_pos) * 50.0;
+		enc.unwrap_pos = (counter * enc.gain) + enc.pos;
+
+		float error = bldc_cmd - speed_filt;
+		float u = 0;
+
+		switch (state)
+		{
+		case forward:
+			if (bldc_cmd > 0) u = PID_CONTROLLER_Compute(&pid, error);
+			else {
+				u = 0;
+				state = brake;
+			}
+			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, 0);
+			break;
+		case brake:
+			pid.ek_1=0;
+			pid.ek_2=0;
+			pid.u=0;
+			u = PID_CONTROLLER_Compute(&pid, error);
+			if (bldc_cmd > 0) state = forward;
+			else if (bldc_cmd < 0) {
+				state = backward_1;
+				u = -500;
+			}
+			break;
+		case backward_1:
+			pid.ek_1=0;
+			pid.ek_2=0;
+			pid.u=0;
+			u = 0;
+			if (bldc_cmd < 0) state = backward_2;
+			else state = brake;
+			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, 1);
+			break;
+		case backward_2:
+			if (bldc_cmd < 0) u = PID_CONTROLLER_Compute(&pid, error);
+			else {
+				u = 0;
+				state = brake;
+			}
+			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, 0);
+			break;
+		}
 
 		enc_msg.data.data[0] = enc.unwrap_pos;
+
+		if (u < 0 && (state == forward || state == brake)) {
+			u = 0;
+			pid.u=0;
+		}
+		else if (u > 0 && (state == backward_1 || state == backward_2)) {
+			u = 0;
+			pid.u=0;
+		}
+
+		RC_Write(&bldc, 1500 + u);
+		RC_Write(&servo, ang2rc(servo_cmd));
+
+		enc_msg.data.data[1] = speed;
 #endif
 		if (!isfirst_callback) RCSOFTCHECK(rcl_publish(&enc_publisher, &enc_msg, NULL))
 		else isfirst_callback = !isfirst_callback;
@@ -239,9 +272,9 @@ void StartDefaultTask(void *argument)
 			RCL_MS_TO_NS(10),
 			imu_timer_callback);
 
-	enc_msg.data.capacity = 1;
+	enc_msg.data.capacity = 2;
 	enc_msg.data.data = (double*) malloc(enc_msg.data.capacity * sizeof(double));
-	enc_msg.data.size = 1;
+	enc_msg.data.size = 2;
 
 	imu_msg.data.capacity = 10;
 	imu_msg.data.data = (double*) malloc(imu_msg.data.capacity * sizeof(double));
@@ -296,7 +329,6 @@ int main(void)
   MX_DMA_Init();
   MX_USART2_UART_Init();
   MX_TIM1_Init();
-  MX_TIM2_Init();
   MX_TIM15_Init();
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
@@ -309,8 +341,9 @@ int main(void)
   BNO055_SetAxis(&bno, P0_Config, P0_Sign);
   HALCHECK(RC_Init(&servo, &htim15, TIM_CHANNEL_1, CPU_FREQ, true))
   HALCHECK(RC_Init(&bldc, &htim15, TIM_CHANNEL_2, CPU_FREQ, false))
-  RC_Set_Input_Range(&servo, 0.5, 2.5);
-  RC_Set_Input_Range(&bldc, 0.5, 2.5);
+  RC_Set_Input_Range(&servo, 500, 2500);
+  RC_Set_Input_Range(&bldc, 500, 2500);
+  PID_CONTROLLER_Init(&pid, KP, KI, KD, 500);
   HAL_TIM_Encoder_Start(&htim1, TIM_CHANNEL_ALL);
 #endif
   /* USER CODE END 2 */
@@ -403,24 +436,11 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c)
 	if (hi2c->Instance == bno.hi2cx->Instance) bno.flag = HAL_OK;
 }
 
-float vel2rc(float speed)
-{
-	float rc_signal = 1.5;
-	if (speed > 0) {
-		rc_signal = fminf((2.0e-7 * pow(speed, 2)) - (2.0e-5 * speed) + 1.5074, 2.0);
-		if (rc_signal < 1.55) rc_signal = 1.5;
-	} else if (speed < 0) {
-		rc_signal = fmaxf(-(3.0e-7 * pow(speed, 2)) + (6.0e-5 * speed) + 1.473, 1.0);
-		if (rc_signal > 1.4) rc_signal = 1.5;
-	}
-	return rc_signal;
-}
-
 float ang2rc(float ang)
 {
-	float rc_signal = 1.35;
-	rc_signal += ang / M_PI_2;
-	rc_signal = fmaxf(fminf(rc_signal, 1.794), -0.905);
+	float rc_signal = 1350;
+	rc_signal += ang * 1000.0 / M_PI_2;
+	rc_signal = fmaxf(fminf(rc_signal, 1794), -905);
 	return rc_signal;
 }
 /* USER CODE END 4 */
