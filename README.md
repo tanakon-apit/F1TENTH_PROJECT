@@ -1,4 +1,4 @@
-# F1TENTH_PROJECT
+# F1TENTH_PROJECT - Firmware
 
 ### 2.1. Install the Editor
 - Download and install STM32CubeIDE from [this link](https://www.st.com/en/development-tools/stm32cubeide.html).
