@@ -28,6 +28,7 @@
 #include "Controller.h"
 #include "Cytron_Motor_260rpm_250W.h"
 #include "BNO055.h"
+#include "PAA5160E1.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/

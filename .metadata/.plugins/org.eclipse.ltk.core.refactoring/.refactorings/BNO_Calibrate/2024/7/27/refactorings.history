@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">&#x0A;<refactoring comment="Rename resource &apos;BNO_Calibrate/Library/inc/BNO055.h&apos; to &apos;PAA5160E1.h&apos;" description="Rename resource &apos;BNO055.h&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Library/inc/BNO055.h" name="PAA5160E1.h" stamp="1719794973363" updateReferences="true"/>&#x0A;<refactoring comment="Rename resource &apos;BNO_Calibrate/Library/inc/PAA5160E1.h&apos; to &apos;BNO055.h&apos;" description="Rename resource &apos;PAA5160E1.h&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Library/inc/PAA5160E1.h" name="BNO055.h" stamp="1719795237805" updateReferences="true"/>
+</session>

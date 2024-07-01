@@ -1,0 +1,65 @@
+/*
+ * BNO055.c
+ *
+ *  Created on: Apr 18, 2024
+ *      Author: 08809
+ */
+
+#include "PAA5160E1.h"
+
+// OTOS register map
+    #define kRegProductId 0x00;
+    #define kRegHwVersion 0x01;
+    #define kRegFwVersion 0x02;
+    #define kRegScalarLinear 0x04;
+    #define kRegScalarAngular 0x05;
+    #define kRegImuCalib 0x06;
+    #define kRegReset 0x07;
+    #define kRegSignalProcess 0x0E;
+    #define kRegSelfTest 0x0F;
+    #define kRegOffXL 0x10;
+    #define kRegOffXH 0x11;
+    #define kRegOffYL 0x12;
+    #define kRegOffYH 0x13;
+    #define kRegOffHL 0x14;
+    #define kRegOffHH 0x15;
+    #define kRegStatus 0x1F;
+    #define kRegPosXL 0x20;
+    #define kRegPosXH 0x21;
+    #define kRegPosYL 0x22;
+    #define kRegPosYH 0x23;
+    #define kRegPosHL 0x24;
+    #define kRegPosHH 0x25;
+    #define kRegVelXL 0x26;
+    #define kRegVelXH 0x27;
+    #define kRegVelYL 0x28;
+    #define kRegVelYH 0x29;
+    #define kRegVelHL 0x2A;
+    #define kRegVelHH 0x2B;
+    #define kRegAccXL 0x2C;
+    #define kRegAccXH 0x2D;
+    #define kRegAccYL 0x2E;
+    #define kRegAccYH 0x2F;
+    #define kRegAccHL 0x30;
+    #define kRegAccHH 0x31;
+    #define kRegPosStdXL 0x32;
+    #define kRegPosStdXH 0x33;
+    #define kRegPosStdYL 0x34;
+    #define kRegPosStdYH 0x35;
+    #define kRegPosStdHL 0x36;
+    #define kRegPosStdHH 0x37;
+    #define kRegVelStdXL 0x38;
+    #define kRegVelStdXH 0x39;
+    #define kRegVelStdYL 0x3A;
+    #define kRegVelStdYH 0x3B;
+    #define kRegVelStdHL 0x3C;
+    #define kRegVelStdHH 0x3D;
+    #define kRegAccStdXL 0x3E;
+    #define kRegAccStdXH 0x3F;
+    #define kRegAccStdYL 0x40;
+    #define kRegAccStdYH 0x41;
+    #define kRegAccStdHL 0x42;
+    #define kRegAccStdHH 0x43;
+
+    // Product ID register value
+    #define kProductId 0x5F;

@@ -6,8 +6,15 @@
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
-		<item key="selection" value="Remap"/>
+		<item key="selection" value="kProductId"/>
 		<list key="findhistory">
+			<item value="kProductId"/>
+			<item value="kDefaultAddress"/>
+			<item value="PAA5160E1_Structure"/>
+			<item value="static constexpr float"/>
+			<item value="rad"/>
+			<item value="deg"/>
+			<item value="static constexpr uint8_t"/>
 			<item value="remap"/>
 			<item value="Vector_Type"/>
 			<item value="Calibration_Stat"/>
@@ -16,19 +23,18 @@
 			<item value="Rx"/>
 			<item value="BNO055_setMode"/>
 			<item value="0x9"/>
-			<item value="BNO055_read8"/>
-			<item value="_DMA"/>
-			<item value="HAL_I2C_Mem_Write"/>
-			<item value="Calib_Stat"/>
 		</list>
 		<list key="replacehistory">
+			<item value="static float"/>
+			<item value="#define"/>
+			<item value=""/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item key="DIALOG_X_ORIGIN" value="8"/>
 		<item key="DIALOG_Y_ORIGIN" value="272"/>
-		<item key="DIALOG_WIDTH" value="412"/>
-		<item key="DIALOG_HEIGHT" value="446"/>
-		<item key="DIALOG_FONT_NAME" value="1|Leelawadee UI|11.25|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|Leelawadee UI"/>
+		<item key="DIALOG_WIDTH" value="322"/>
+		<item key="DIALOG_HEIGHT" value="391"/>
+		<item key="DIALOG_FONT_NAME" value="1|Leelawadee UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|5|0|Leelawadee UI"/>
 	</section>
 </section>

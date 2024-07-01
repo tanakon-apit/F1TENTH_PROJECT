@@ -31,7 +31,8 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Core/Inc/usart.h ../Core/Inc/gpio.h \
  C:/Users/tucha/OneDrive/Projects/Mobile\ Robot/F1TENTH_PROJECT/BNO_Calibrate/Library/inc/Controller.h \
  C:/Users/tucha/OneDrive/Projects/Mobile\ Robot/F1TENTH_PROJECT/BNO_Calibrate/Config/inc/Cytron_Motor_260rpm_250W.h \
- ../Core/Inc/BNO055.h
+ ../Core/Inc/BNO055.h \
+ C:/Users/tucha/OneDrive/Projects/Mobile\ Robot/F1TENTH_PROJECT/BNO_Calibrate/Library/inc/PAA5160E1.h
 ../Core/Inc/main.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h:
 ../Core/Inc/stm32l4xx_hal_conf.h:
@@ -69,3 +70,4 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 C:/Users/tucha/OneDrive/Projects/Mobile\ Robot/F1TENTH_PROJECT/BNO_Calibrate/Library/inc/Controller.h:
 C:/Users/tucha/OneDrive/Projects/Mobile\ Robot/F1TENTH_PROJECT/BNO_Calibrate/Config/inc/Cytron_Motor_260rpm_250W.h:
 ../Core/Inc/BNO055.h:
+C:/Users/tucha/OneDrive/Projects/Mobile\ Robot/F1TENTH_PROJECT/BNO_Calibrate/Library/inc/PAA5160E1.h:
