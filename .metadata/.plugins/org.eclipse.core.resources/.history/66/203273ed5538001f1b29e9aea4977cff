@@ -171,7 +171,7 @@ int main(void)
 			//BNO055_Read(&bno, LINEARACCEL);
 			//			BNO055_Read(&bno, EULER);
 			PAA5160E1_getPosVelAccAndStdDev_DMA(&paa);
-			paa.flag = HAL_BUSY;
+			bno.flag = HAL_BUSY;
 		}
 	}
 	/* USER CODE END 3 */
