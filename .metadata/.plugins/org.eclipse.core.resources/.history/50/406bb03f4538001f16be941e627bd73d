@@ -439,7 +439,6 @@ HAL_StatusTypeDef PAA5160E1_getPosVelAccStdDev(PAA5160E1_Structure *paa);
 /// @param accStdDev Standard deviation of the acceleration measured by the OTOS
 /// @return 0 for succuss, negative for errors, positive for warnings
 HAL_StatusTypeDef PAA5160E1_getPosVelAccAndStdDev(PAA5160E1_Structure *paa);
-HAL_StatusTypeDef PAA5160E1_getPosVelAccAndStdDev_DMA(PAA5160E1_Structure *paa);
 
 // Function to read raw pose registers and convert to specified units
 HAL_StatusTypeDef PAA5160E1_readPoseRegs(PAA5160E1_Structure *paa, uint8_t reg, float rawToXY, float rawToH);

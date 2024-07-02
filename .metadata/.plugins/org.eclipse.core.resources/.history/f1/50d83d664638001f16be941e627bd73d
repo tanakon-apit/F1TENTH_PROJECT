@@ -164,13 +164,13 @@ int main(void)
 
 		/* USER CODE BEGIN 3 */
 		uint32_t time = HAL_GetTick();
-		if (paa.flag == HAL_OK && time >= paa_time) //
+		if (time >= paa_time) //bno.flag == HAL_OK &&
 		{
 			paa_time += 10;
 			//BNO055_Read(&bno, EULER);
 			//BNO055_Read(&bno, LINEARACCEL);
 			//			BNO055_Read(&bno, EULER);
-			PAA5160E1_getPosVelAccAndStdDev_DMA(&paa);
+			PAA5160E1_getPosVelAcc(&paa);
 			bno.flag = HAL_BUSY;
 		}
 	}
@@ -238,10 +238,7 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c)
-{
-	if (hi2c->Instance == paa.hi2cx->Instance) paa.flag = HAL_OK;
-}
+
 /* USER CODE END 4 */
 
 /**

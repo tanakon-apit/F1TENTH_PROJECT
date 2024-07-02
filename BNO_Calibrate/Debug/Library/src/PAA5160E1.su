@@ -18,7 +18,8 @@
 ../Library/src/PAA5160E1.c:191:19:PAA5160E1_getPosVelAcc	56	static
 ../Library/src/PAA5160E1.c:209:19:PAA5160E1_getPosVelAccStdDev	56	static
 ../Library/src/PAA5160E1.c:227:19:PAA5160E1_getPosVelAccAndStdDev	72	static
-../Library/src/PAA5160E1.c:248:19:PAA5160E1_readPoseRegs	48	static
-../Library/src/PAA5160E1.c:266:19:PAA5160E1_writePoseRegs	48	static
-../Library/src/PAA5160E1.c:277:6:PAA5160E1_regsToPose	32	static
-../Library/src/PAA5160E1.c:290:6:PAA5160E1_poseToRegs	32	static
+../Library/src/PAA5160E1.c:248:19:PAA5160E1_getPosVelAccAndStdDev_DMA	24	static
+../Library/src/PAA5160E1.c:263:19:PAA5160E1_readPoseRegs	48	static
+../Library/src/PAA5160E1.c:281:19:PAA5160E1_writePoseRegs	48	static
+../Library/src/PAA5160E1.c:292:6:PAA5160E1_regsToPose	32	static
+../Library/src/PAA5160E1.c:305:6:PAA5160E1_poseToRegs	32	static

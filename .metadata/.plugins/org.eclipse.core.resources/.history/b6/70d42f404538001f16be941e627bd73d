@@ -245,21 +245,6 @@ HAL_StatusTypeDef PAA5160E1_getPosVelAccAndStdDev(PAA5160E1_Structure *paa)
 	return HAL_OK;
 }
 
-HAL_StatusTypeDef PAA5160E1_getPosVelAccAndStdDev_DMA(PAA5160E1_Structure *paa)
-{
-	// Convert raw data to pose units
-	PAA5160E1_regsToPose(&paa->pos, &paa->RxBuffer[0], kInt16ToMeter, kInt16ToRad);
-	PAA5160E1_regsToPose(&paa->vel, &paa->RxBuffer[6], kInt16ToMps, kInt16ToRps);
-	PAA5160E1_regsToPose(&paa->acc, &paa->RxBuffer[12], kInt16ToMpss, kInt16ToRpss);
-	PAA5160E1_regsToPose(&paa->posStdDev, &paa->RxBuffer[18], kInt16ToMeter, kInt16ToRad);
-	PAA5160E1_regsToPose(&paa->velStdDev, &paa->RxBuffer[24], kInt16ToMps, kInt16ToRps);
-	PAA5160E1_regsToPose(&paa->accStdDev, &paa->RxBuffer[30], kInt16ToMpss, kInt16ToRpss);
-
-	HAL_I2C_Mem_Read_DMA(paa->hi2cx, paa->address, kRegPosXL, 1, paa->RxBuffer, 36);
-	// Done!
-	return HAL_OK;
-}
-
 HAL_StatusTypeDef PAA5160E1_readPoseRegs(PAA5160E1_Structure *paa, uint8_t reg, float rawToXY, float rawToH)
 {
 	uint8_t rxbuffer[6];

@@ -271,6 +271,7 @@ typedef struct {
 	sfe_otos_pose2d_t velStdDev;
 	sfe_otos_pose2d_t accStdDev;
 	uint8_t RxBuffer[44];
+	uint8_t DataBuffer[44];
 	//PAA5160E1_offsets offsets;
 	sfe_otos_status_t status;
 	PAA5160E1_Calibration_Stat Calibration_Stat;

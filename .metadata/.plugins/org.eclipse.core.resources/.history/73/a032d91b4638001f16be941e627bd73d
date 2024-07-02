@@ -248,7 +248,7 @@ HAL_StatusTypeDef PAA5160E1_getPosVelAccAndStdDev(PAA5160E1_Structure *paa)
 HAL_StatusTypeDef PAA5160E1_getPosVelAccAndStdDev_DMA(PAA5160E1_Structure *paa)
 {
 	// Convert raw data to pose units
-	PAA5160E1_regsToPose(&paa->pos, &paa->RxBuffer[0], kInt16ToMeter, kInt16ToRad);
+	PAA5160E1_regsToPose(&paa->pos, paa->RxBuffer, kInt16ToMeter, kInt16ToRad);
 	PAA5160E1_regsToPose(&paa->vel, &paa->RxBuffer[6], kInt16ToMps, kInt16ToRps);
 	PAA5160E1_regsToPose(&paa->acc, &paa->RxBuffer[12], kInt16ToMpss, kInt16ToRpss);
 	PAA5160E1_regsToPose(&paa->posStdDev, &paa->RxBuffer[18], kInt16ToMeter, kInt16ToRad);
