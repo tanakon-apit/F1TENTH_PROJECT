@@ -6,23 +6,23 @@
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
-		<item key="selection" value="kProductId"/>
+		<item key="selection" value="unit"/>
 		<list key="findhistory">
+			<item value="unit"/>
+			<item value="bno"/>
+			<item value="Inches"/>
+			<item value="sfe_otos_linear_unit_t"/>
+			<item value="poseToRegs"/>
+			<item value="PAA5160E1_poseToRegs"/>
+			<item value="readPoseRegs"/>
+			<item value="sfe_otos_status_t "/>
+			<item value="kMaxScalar"/>
+			<item value="kMinScalar"/>
 			<item value="kProductId"/>
 			<item value="kDefaultAddress"/>
 			<item value="PAA5160E1_Structure"/>
 			<item value="static constexpr float"/>
 			<item value="rad"/>
-			<item value="deg"/>
-			<item value="static constexpr uint8_t"/>
-			<item value="remap"/>
-			<item value="Vector_Type"/>
-			<item value="Calibration_Stat"/>
-			<item value="BNO055_getCalibration"/>
-			<item value="0xc"/>
-			<item value="Rx"/>
-			<item value="BNO055_setMode"/>
-			<item value="0x9"/>
 		</list>
 		<list key="replacehistory">
 			<item value="static float"/>
@@ -31,10 +31,10 @@
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
-		<item key="DIALOG_X_ORIGIN" value="8"/>
+		<item key="DIALOG_X_ORIGIN" value="9"/>
 		<item key="DIALOG_Y_ORIGIN" value="272"/>
-		<item key="DIALOG_WIDTH" value="322"/>
-		<item key="DIALOG_HEIGHT" value="391"/>
-		<item key="DIALOG_FONT_NAME" value="1|Leelawadee UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|5|0|Leelawadee UI"/>
+		<item key="DIALOG_WIDTH" value="414"/>
+		<item key="DIALOG_HEIGHT" value="454"/>
+		<item key="DIALOG_FONT_NAME" value="1|Leelawadee UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|5|0|Leelawadee UI"/>
 	</section>
 </section>

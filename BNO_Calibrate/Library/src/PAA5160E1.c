@@ -18,7 +18,7 @@
     Tracking Odometry Sensor (OTOS).
  *******************************************************************************/
 
-HAL_StatusTypeDef PAA5160E1_Init(PAA5160E1_Structure *paa, I2C_HandleTypeDef *hi2cx, uint8_t addr, OPRMode mode, uint8_t unit)
+HAL_StatusTypeDef PAA5160E1_Init(PAA5160E1_Structure *paa, I2C_HandleTypeDef *hi2cx)
 {
 	uint8_t txbuffer;
 	uint8_t rxbuffer;
@@ -26,11 +26,16 @@ HAL_StatusTypeDef PAA5160E1_Init(PAA5160E1_Structure *paa, I2C_HandleTypeDef *hi
 	paa->hi2cx = hi2cx;
 	paa->address = kDefaultAddress;
 
-	HAL_I2C_Mem_Read(paa->hi2cx, paa->address, kRegProductId, 1, &rxbuffer, 1, 10);
+	HAL_StatusTypeDef status;
+	status = HAL_I2C_Mem_Read(paa->hi2cx, paa->address, kRegProductId, 1, &rxbuffer, 1, 10);
+
 	if (rxbuffer != kProductId) {
 		HAL_Delay(1000);
-		HAL_I2C_Mem_Read(bno->hi2cx, bno->address, CHIP_ID, 1, &rxbuffer, 1, 10);
-		if (rxbuffer != kProductId) return HAL_ERROR;
+		HAL_I2C_Mem_Read(paa->hi2cx, paa->address, kRegProductId, 1, &rxbuffer, 1, 10);
+		if (rxbuffer != kProductId) {
+			paa->flag = HAL_ERROR;
+			return HAL_ERROR;
+		}
 	}
 
 	paa->flag = HAL_OK;
@@ -41,6 +46,7 @@ HAL_StatusTypeDef PAA5160E1_Init(PAA5160E1_Structure *paa, I2C_HandleTypeDef *hi
 
 HAL_StatusTypeDef PAA5160E1_calibrateImu(PAA5160E1_Structure *paa, uint8_t numSamples, uint8_t waitUntilDone)
 {
+	paa->Calibration_Stat.maxSample = numSamples;
 	HAL_I2C_Mem_Write(paa->hi2cx, paa->address, kRegImuCalib, 1, &numSamples, 1, 10);
 
 	// Wait 1 sample period (2.4ms) to ensure the register updates
@@ -55,7 +61,7 @@ HAL_StatusTypeDef PAA5160E1_calibrateImu(PAA5160E1_Structure *paa, uint8_t numSa
 	for(uint8_t numAttempts = numSamples; numAttempts > 0; numAttempts--)
 	{
 		// Read the gryo calibration register value
-		HAL_I2C_Mem_Read(paa->hi2cx, paa->address, kRegImuCalib, 1, paa->Calibration_Stat.numSample, 1, 10);
+		HAL_I2C_Mem_Read(paa->hi2cx, paa->address, kRegImuCalib, 1, &paa->Calibration_Stat.numSample, 1, 10);
 
 		// Check if calibration is done
 		if(paa->Calibration_Stat.numSample == 0)
@@ -71,217 +77,204 @@ HAL_StatusTypeDef PAA5160E1_calibrateImu(PAA5160E1_Structure *paa, uint8_t numSa
 	return HAL_ERROR;
 }
 
-HAL_StatusTypeDef PAA5160E1_getLinearScalar(PAA5160E1_Structure *paa)
+float PAA5160E1_getLinearScalar(PAA5160E1_Structure *paa)
 {
 	// Read the linear scalar from the device
-	uint8_t rawScalar;
-	HAL_I2C_Mem_Read(paa->hi2cx, paa->address, kRegScalarLinear, 1, paa->Calibration_Stat.numSample, 1, 10);
-	sfeTkError_t err = _commBus->readRegisterByte(kRegScalarLinear, rawScalar);
+	uint8_t rxbuffer;
+	HAL_I2C_Mem_Read(paa->hi2cx, paa->address, kRegScalarLinear, 1, &rxbuffer, 1, 10);
 
 	// Convert to float, multiples of 0.1%
-	scalar = (((int8_t)rawScalar) * 0.001f) + 1.0f;
+	float scalar = (((int8_t)rxbuffer) * 0.001f) + 1.0f;
 
-	// Done!
-	return kSTkErrOk;
+	return scalar;
 }
 
 HAL_StatusTypeDef PAA5160E1_setLinearScalar(PAA5160E1_Structure *paa, float scalar)
 {
 	// Check if the scalar is out of bounds
 	if(scalar < kMinScalar || scalar > kMaxScalar)
-		return kSTkErrFail;
+		return HAL_ERROR;
 
 	// Convert to integer, multiples of 0.1% (+0.5 to round instead of truncate)
 	uint8_t rawScalar = (int8_t)((scalar - 1.0f) * 1000 + 0.5f);
 
 	// Write the scalar to the device
-	return _commBus->writeRegisterByte(kRegScalarLinear, rawScalar);
+	return HAL_I2C_Mem_Write(paa->hi2cx, paa->address, kRegScalarLinear, 1, &rawScalar, 1, 10);
+
 }
 
-HAL_StatusTypeDef PAA5160E1_getAngularScalar(PAA5160E1_Structure *paa)
+float PAA5160E1_getAngularScalar(PAA5160E1_Structure *paa)
 {
 	// Read the angular scalar from the device
-	uint8_t rawScalar;
-	sfeTkError_t err = _commBus->readRegisterByte(kRegScalarAngular, rawScalar);
-	if(err != kSTkErrOk)
-		return kSTkErrFail;
+	uint8_t rxbuffer;
+	HAL_I2C_Mem_Read(paa->hi2cx, paa->address, kRegScalarAngular, 1, &rxbuffer, 1, 10);
 
 	// Convert to float, multiples of 0.1%
-	scalar = (((int8_t)rawScalar) * 0.001f) + 1.0f;
+	float scalar = (((int8_t)rxbuffer) * 0.001f) + 1.0f;
 
-	// Done!
-	return kSTkErrOk;
+	return scalar;
 }
 
 HAL_StatusTypeDef PAA5160E1_setAngularScalar(PAA5160E1_Structure *paa, float scalar)
 {
 	// Check if the scalar is out of bounds
 	if(scalar < kMinScalar || scalar > kMaxScalar)
-		return kSTkErrFail;
+		return HAL_ERROR;
 
 	// Convert to integer, multiples of 0.1% (+0.5 to round instead of truncate)
 	uint8_t rawScalar = (int8_t)((scalar - 1.0f) * 1000 + 0.5f);
 
 	// Write the scalar to the device
-	return _commBus->writeRegisterByte(kRegScalarAngular, rawScalar);
+	return HAL_I2C_Mem_Write(paa->hi2cx, paa->address, kRegScalarAngular, 1, &rawScalar, 1, 10);
+
 }
 
-HAL_StatusTypeDef resetTracking()
+HAL_StatusTypeDef resetTracking(PAA5160E1_Structure *paa)
 {
 	// Set tracking reset bit
-	return HAL_I2C_Mem_Write(paa->hi2cx, paa->address, kRegReset, 1, 0x01, 1, 10);
+	uint8_t txbuffer;
+	txbuffer = 0x01;
+
+	return HAL_I2C_Mem_Write(paa->hi2cx, paa->address, kRegReset, 1, &txbuffer, 1, 10);
 }
 
 HAL_StatusTypeDef PAA5160E1_getStatus(PAA5160E1_Structure *paa)
 {
-	return HAL_I2C_Mem_Read(paa->hi2cx, paa->address, kRegStatus, 1, paa->Calibration_Stat.numSample, 1, 10);
+	return HAL_I2C_Mem_Read(paa->hi2cx, paa->address, kRegStatus, 1, &paa->status.value, 1, 10);
 }
 
 HAL_StatusTypeDef PAA5160E1_getOffset(PAA5160E1_Structure *paa)
 {
-	return readPoseRegs(kRegOffXL, pose, kInt16ToMeter, kInt16ToRad);
+	return PAA5160E1_readPoseRegs(paa, kRegOffXL, kInt16ToMeter, kInt16ToRad);
 }
 
 HAL_StatusTypeDef PAA5160E1_setOffset(PAA5160E1_Structure *paa)
 {
-	return writePoseRegs(kRegOffXL, pose, kMeterToInt16, kRadToInt16);
+	return PAA5160E1_writePoseRegs(paa, kRegOffXL, kMeterToInt16, kRadToInt16);
 }
 
 HAL_StatusTypeDef PAA5160E1_getPosition(PAA5160E1_Structure *paa)
 {
-	return readPoseRegs(kRegPosXL, pose, kInt16ToMeter, kInt16ToRad);
+	return PAA5160E1_readPoseRegs(paa, kRegPosXL, kInt16ToMeter, kInt16ToRad);
 }
 
 HAL_StatusTypeDef PAA5160E1_setPosition(PAA5160E1_Structure *paa)
 {
-	return writePoseRegs(kRegPosXL, pose, kMeterToInt16, kRadToInt16);
+	return PAA5160E1_writePoseRegs(paa, kRegPosXL, kMeterToInt16, kRadToInt16);
 }
 
 HAL_StatusTypeDef PAA5160E1_getVelocity(PAA5160E1_Structure *paa)
 {
-	return readPoseRegs(kRegVelXL, pose, kInt16ToMps, kInt16ToRps);
+	return PAA5160E1_readPoseRegs(paa, kRegVelXL, kInt16ToMps, kInt16ToRps);
 }
 
 HAL_StatusTypeDef PAA5160E1_getAcceleration(PAA5160E1_Structure *paa)
 {
-	return readPoseRegs(kRegAccXL, pose, kInt16ToMpss, kInt16ToRpss);
+	return PAA5160E1_readPoseRegs(paa, kRegAccXL, kInt16ToMpss, kInt16ToRpss);
 }
 
 HAL_StatusTypeDef PAA5160E1_getPositionStdDev(PAA5160E1_Structure *paa)
 {
-	return readPoseRegs(kRegPosStdXL, pose, kInt16ToMeter, kInt16ToRad);
+	return PAA5160E1_readPoseRegs(paa, kRegPosStdXL, kInt16ToMeter, kInt16ToRad);
 }
 
 HAL_StatusTypeDef PAA5160E1_getVelocityStdDev(PAA5160E1_Structure *paa)
 {
-	return readPoseRegs(kRegVelStdXL, pose, kInt16ToMps, kInt16ToRps);
+	return PAA5160E1_readPoseRegs(paa, kRegVelStdXL, kInt16ToMps, kInt16ToRps);
 }
 
 HAL_StatusTypeDef PAA5160E1_getAccelerationStdDev(PAA5160E1_Structure *paa)
 {
-	return readPoseRegs(kRegAccStdXL, pose, kInt16ToMpss, kInt16ToRpss);
+	return PAA5160E1_readPoseRegs(paa, kRegAccStdXL, kInt16ToMpss, kInt16ToRpss);
 }
 
 HAL_StatusTypeDef PAA5160E1_getPosVelAcc(PAA5160E1_Structure *paa)
 {
 	// Read all pose registers
-	uint8_t rawData[18];
-	size_t bytesRead;
-	sfeTkError_t err = _commBus->readRegisterRegion(kRegPosXL, rawData, 18, bytesRead);
-	if(err != kSTkErrOk)
-		return err;
-
-	// Check if we read the correct number of bytes
-	if(bytesRead != 18)
-		return kSTkErrFail;
+	uint8_t rxbuffer[18];
+	HAL_StatusTypeDef status;
+	status = HAL_I2C_Mem_Read(paa->hi2cx, paa->address, kRegPosXL, 1, rxbuffer, 18, 10);
+	if (status != HAL_OK)
+		return HAL_ERROR;
 
 	// Convert raw data to pose units
-	regsToPose(rawData, pos, kInt16ToMeter, kInt16ToRad);
-	regsToPose(rawData + 6, vel, kInt16ToMps, kInt16ToRps);
-	regsToPose(rawData + 12, acc, kInt16ToMpss, kInt16ToRpss);
+	PAA5160E1_regsToPose(&paa->pos, rxbuffer, kInt16ToMeter, kInt16ToRad);
+	PAA5160E1_regsToPose(&paa->vel, rxbuffer + 6, kInt16ToMps, kInt16ToRps);
+	PAA5160E1_regsToPose(&paa->acc, rxbuffer + 12, kInt16ToMpss, kInt16ToRpss);
 
 	// Done!
-	return kSTkErrOk;
+	return HAL_OK;
 }
 
 HAL_StatusTypeDef PAA5160E1_getPosVelAccStdDev(PAA5160E1_Structure *paa)
 {
 	// Read all pose registers
-	uint8_t rawData[18];
-	size_t bytesRead;
-	sfeTkError_t err = _commBus->readRegisterRegion(kRegPosStdXL, rawData, 18, bytesRead);
-	if(err != kSTkErrOk)
-		return err;
-
-	// Check if we read the correct number of bytes
-	if(bytesRead != 18)
-		return kSTkErrFail;
+	uint8_t rxbuffer[18];
+	HAL_StatusTypeDef status;
+	status = HAL_I2C_Mem_Read(paa->hi2cx, paa->address, kRegPosStdXL, 1, rxbuffer, 18, 10);
+	if (status != HAL_OK)
+		return HAL_ERROR;
 
 	// Convert raw data to pose units
-	regsToPose(rawData, pos, kInt16ToMeter, kInt16ToRad);
-	regsToPose(rawData + 6, vel, kInt16ToMps, kInt16ToRps);
-	regsToPose(rawData + 12, acc, kInt16ToMpss, kInt16ToRpss);
+	PAA5160E1_regsToPose(&paa->pos, rxbuffer, kInt16ToMeter, kInt16ToRad);
+	PAA5160E1_regsToPose(&paa->vel, rxbuffer + 6, kInt16ToMps, kInt16ToRps);
+	PAA5160E1_regsToPose(&paa->acc, rxbuffer + 12, kInt16ToMpss, kInt16ToRpss);
 
 	// Done!
-	return kSTkErrOk;
+	return HAL_OK;
 }
 
 HAL_StatusTypeDef PAA5160E1_getPosVelAccAndStdDev(PAA5160E1_Structure *paa)
 {
 	// Read all pose registers
-	uint8_t rawData[36];
-	size_t bytesRead;
-	sfeTkError_t err = _commBus->readRegisterRegion(kRegPosXL, rawData, 36, bytesRead);
-	if(err != kSTkErrOk)
-		return err;
-
-	// Check if we read the correct number of bytes
-	if(bytesRead != 36)
-		return kSTkErrFail;
+	uint8_t rxbuffer[36];
+	HAL_StatusTypeDef status;
+	status = HAL_I2C_Mem_Read(paa->hi2cx, paa->address, kRegPosXL, 1, rxbuffer, 36, 10);
+	if (status != HAL_OK)
+		return HAL_ERROR;
 
 	// Convert raw data to pose units
-	regsToPose(rawData, pos, kInt16ToMeter, kInt16ToRad);
-	regsToPose(rawData + 6, vel, kInt16ToMps, kInt16ToRps);
-	regsToPose(rawData + 12, acc, kInt16ToMpss, kInt16ToRpss);
-	regsToPose(rawData + 18, posStdDev, kInt16ToMeter, kInt16ToRad);
-	regsToPose(rawData + 24, velStdDev, kInt16ToMps, kInt16ToRps);
-	regsToPose(rawData + 30, accStdDev, kInt16ToMpss, kInt16ToRpss);
+	PAA5160E1_regsToPose(&paa->pos, rxbuffer, kInt16ToMeter, kInt16ToRad);
+	PAA5160E1_regsToPose(&paa->vel, rxbuffer + 6, kInt16ToMps, kInt16ToRps);
+	PAA5160E1_regsToPose(&paa->acc, rxbuffer + 12, kInt16ToMpss, kInt16ToRpss);
+	PAA5160E1_regsToPose(&paa->posStdDev, rxbuffer + 18, kInt16ToMeter, kInt16ToRad);
+	PAA5160E1_regsToPose(&paa->velStdDev, rxbuffer + 24, kInt16ToMps, kInt16ToRps);
+	PAA5160E1_regsToPose(&paa->accStdDev, rxbuffer + 30, kInt16ToMpss, kInt16ToRpss);
 
 	// Done!
-	return kSTkErrOk;
+	return HAL_OK;
 }
 
-HAL_StatusTypeDef PAA5160E1_readPoseRegs(PAA5160E1_Structure *paa, float rawToXY, float rawToH)
+HAL_StatusTypeDef PAA5160E1_readPoseRegs(PAA5160E1_Structure *paa, uint8_t reg, float rawToXY, float rawToH)
 {
-	size_t bytesRead;
-	uint8_t rawData[6];
+	uint8_t rxbuffer[6];
 
 	// Attempt to read the raw pose data
-	sfeTkError_t err = _commBus->readRegisterRegion(reg, rawData, 6, bytesRead);
-	if (err != kSTkErrOk)
-		return err;
+	HAL_StatusTypeDef status;
+	status = HAL_I2C_Mem_Read(paa->hi2cx, paa->address, reg, 1, rxbuffer, 6, 10);
 
 	// Check if we read the correct number of bytes
-	if (bytesRead != 6)
-		return kSTkErrFail;
+	if (status != HAL_OK)
+		return HAL_ERROR;
 
-	regsToPose(rawData, pose, rawToXY, rawToH);
+	PAA5160E1_regsToPose(&paa->pos, rxbuffer, rawToXY, rawToH);
 
 	// Done!
-	return kSTkErrOk;
+	return HAL_OK;
 }
 
-HAL_StatusTypeDef PAA5160E1_writePoseRegs(PAA5160E1_Structure *paa, float xyToRaw, float hToRaw)
+HAL_StatusTypeDef PAA5160E1_writePoseRegs(PAA5160E1_Structure *paa, uint8_t reg, float xyToRaw, float hToRaw)
 {
 	// Store raw data in a temporary buffer
-	uint8_t rawData[6];
-	poseToRegs(rawData, pose, xyToRaw, hToRaw);
+	uint8_t txbuffer[6];
+	PAA5160E1_poseToRegs(&paa->pos, txbuffer, xyToRaw, hToRaw);
 
 	// Write the raw data to the device
-	return _commBus->writeRegisterRegion(reg, rawData, 6);
+	return HAL_I2C_Mem_Write(paa->hi2cx, paa->address, reg, 1, txbuffer, 6, 10);
+
 }
 
-void PAA5160E1_regsToPose(PAA5160E1_Structure *paa, uint8_t *rawData, float rawToXY, float rawToH)
+void PAA5160E1_regsToPose(sfe_otos_pose2d_t *pose, uint8_t *rawData, float rawToXY, float rawToH)
 {
 	// Store raw data
 	int16_t rawX = (rawData[1] << 8) | rawData[0];
@@ -289,17 +282,17 @@ void PAA5160E1_regsToPose(PAA5160E1_Structure *paa, uint8_t *rawData, float rawT
 	int16_t rawH = (rawData[5] << 8) | rawData[4];
 
 	// Store in pose and convert to units
-	pose.x = rawX * rawToXY * _meterToUnit;
-	pose.y = rawY * rawToXY * _meterToUnit;
-	pose.h = rawH * rawToH * _radToUnit;
+	pose->x = rawX * rawToXY;
+	pose->y = rawY * rawToXY;
+	pose->h = rawH * rawToH;
 }
 
-void PAA5160E1_poseToRegs(PAA5160E1_Structure *paa, uint8_t *rawData, float xyToRaw, float hToRaw)
+void PAA5160E1_poseToRegs(sfe_otos_pose2d_t *pose, uint8_t *rawData, float xyToRaw, float hToRaw)
 {
 	// Convert pose units to raw data
-	int16_t rawX = pose.x * xyToRaw / _meterToUnit;
-	int16_t rawY = pose.y * xyToRaw / _meterToUnit;
-	int16_t rawH = pose.h * hToRaw / _radToUnit;
+	int16_t rawX = pose->x * xyToRaw;
+	int16_t rawY = pose->y * xyToRaw;
+	int16_t rawH = pose->h * hToRaw;
 
 	// Store raw data in buffer
 	rawData[0] = rawX & 0xFF;

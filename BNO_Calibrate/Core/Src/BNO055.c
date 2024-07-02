@@ -20,7 +20,7 @@ HAL_StatusTypeDef BNO055_Init(BNO055_Structure *bno, I2C_HandleTypeDef *hi2cx, u
 
 	bno->hi2cx = hi2cx;
 	bno->address = BNO055_ADD_H;
-	if (addr == 0) bno->address = BNO055_ADD_L;
+	if (addr == 0) bno->address = 0x17;//BNO055_ADD_L;
 
 	HAL_I2C_Mem_Read(bno->hi2cx, bno->address, CHIP_ID, 1, &rxbuffer, 1, 10);
 	if (rxbuffer != 0xA0) {

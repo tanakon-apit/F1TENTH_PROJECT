@@ -12,112 +12,112 @@
 #include "math.h"
 
 /// @brief Default I2C addresses of the Qwiic OTOS
-#define kDefaultAddress = 0x17;
+#define kDefaultAddress 0x17 << 1
 
 /// @brief Minimum scalar value for the linear and angular scalars
-//static constexpr float kMinScalar = 0.872f;
+static const float kMinScalar = 0.872f;
 
 /// @brief Maximum scalar value for the linear and angular scalars
-//static constexpr float kMaxScalar = 1.127f;
+static const float kMaxScalar = 1.127f;
 
 // OTOS register map
-#define kRegProductId 0x00;
-#define kRegHwVersion 0x01;
-#define kRegFwVersion 0x02;
-#define kRegScalarLinear 0x04;
-#define kRegScalarAngular 0x05;
-#define kRegImuCalib 0x06;
-#define kRegReset 0x07;
-#define kRegSignalProcess 0x0E;
-#define kRegSelfTest 0x0F;
-#define kRegOffXL 0x10;
-#define kRegOffXH 0x11;
-#define kRegOffYL 0x12;
-#define kRegOffYH 0x13;
-#define kRegOffHL 0x14;
-#define kRegOffHH 0x15;
-#define kRegStatus 0x1F;
-#define kRegPosXL 0x20;
-#define kRegPosXH 0x21;
-#define kRegPosYL 0x22;
-#define kRegPosYH 0x23;
-#define kRegPosHL 0x24;
-#define kRegPosHH 0x25;
-#define kRegVelXL 0x26;
-#define kRegVelXH 0x27;
-#define kRegVelYL 0x28;
-#define kRegVelYH 0x29;
-#define kRegVelHL 0x2A;
-#define kRegVelHH 0x2B;
-#define kRegAccXL 0x2C;
-#define kRegAccXH 0x2D;
-#define kRegAccYL 0x2E;
-#define kRegAccYH 0x2F;
-#define kRegAccHL 0x30;
-#define kRegAccHH 0x31;
-#define kRegPosStdXL 0x32;
-#define kRegPosStdXH 0x33;
-#define kRegPosStdYL 0x34;
-#define kRegPosStdYH 0x35;
-#define kRegPosStdHL 0x36;
-#define kRegPosStdHH 0x37;
-#define kRegVelStdXL 0x38;
-#define kRegVelStdXH 0x39;
-#define kRegVelStdYL 0x3A;
-#define kRegVelStdYH 0x3B;
-#define kRegVelStdHL 0x3C;
-#define kRegVelStdHH 0x3D;
-#define kRegAccStdXL 0x3E;
-#define kRegAccStdXH 0x3F;
-#define kRegAccStdYL 0x40;
-#define kRegAccStdYH 0x41;
-#define kRegAccStdHL 0x42;
-#define kRegAccStdHH 0x43;
+#define kRegProductId 0x00
+#define kRegHwVersion 0x01
+#define kRegFwVersion 0x02
+#define kRegScalarLinear 0x04
+#define kRegScalarAngular 0x05
+#define kRegImuCalib 0x06
+#define kRegReset 0x07
+#define kRegSignalProcess 0x0E
+#define kRegSelfTest 0x0F
+#define kRegOffXL 0x10
+#define kRegOffXH 0x11
+#define kRegOffYL 0x12
+#define kRegOffYH 0x13
+#define kRegOffHL 0x14
+#define kRegOffHH 0x15
+#define kRegStatus 0x1F
+#define kRegPosXL 0x20
+#define kRegPosXH 0x21
+#define kRegPosYL 0x22
+#define kRegPosYH 0x23
+#define kRegPosHL 0x24
+#define kRegPosHH 0x25
+#define kRegVelXL 0x26
+#define kRegVelXH 0x27
+#define kRegVelYL 0x28
+#define kRegVelYH 0x29
+#define kRegVelHL 0x2A
+#define kRegVelHH 0x2B
+#define kRegAccXL 0x2C
+#define kRegAccXH 0x2D
+#define kRegAccYL 0x2E
+#define kRegAccYH 0x2F
+#define kRegAccHL 0x30
+#define kRegAccHH 0x31
+#define kRegPosStdXL 0x32
+#define kRegPosStdXH 0x33
+#define kRegPosStdYL 0x34
+#define kRegPosStdYH 0x35
+#define kRegPosStdHL 0x36
+#define kRegPosStdHH 0x37
+#define kRegVelStdXL 0x38
+#define kRegVelStdXH 0x39
+#define kRegVelStdYL 0x3A
+#define kRegVelStdYH 0x3B
+#define kRegVelStdHL 0x3C
+#define kRegVelStdHH 0x3D
+#define kRegAccStdXL 0x3E
+#define kRegAccStdXH 0x3F
+#define kRegAccStdYL 0x40
+#define kRegAccStdYH 0x41
+#define kRegAccStdHL 0x42
+#define kRegAccStdHH 0x43
 
 // Product ID register value
-#define kProductId 0x5F;
+#define kProductId 0x5F
 
 // Conversion factors
-static const double kMeterToInch = 39.37f;
-static const double kInchToMeter = 1.0f / kMeterToInch;
-static const double kRadianToDegree = 180.0f / M_PI;
-static const double kDegreeToRadian = M_PI / 180.0f;
+static const float kMeterToInch = 39.37f;
+static const float kInchToMeter = 1.0f / kMeterToInch;
+static const float kRadianToDegree = 180.0f / M_PI;
+static const float kDegreeToRadian = M_PI / 180.0f;
 
 // Conversion factor for the linear position registers. 16-bit signed
 // registers with a max value of 10 meters (394 inches) gives a resolution
 // of about 0.0003 mps (0.012 ips)
-static const double kMeterToInt16 = 32768.0f / 10.0f;
-static const double kInt16ToMeter = 1.0f / kMeterToInt16;
+static const float kMeterToInt16 = 32768.0f / 10.0f;
+static const float kInt16ToMeter = 1.0f / kMeterToInt16;
 
 // Conversion factor for the linear velocity registers. 16-bit signed
 // registers with a max value of 5 mps (197 ips) gives a resolution of about
 // 0.00015 mps (0.006 ips)
-static const double kMpsToInt16 = 32768.0f / 5.0f;
-static const double kInt16ToMps = 1.0f / kMpsToInt16;
+static const float kMpsToInt16 = 32768.0f / 5.0f;
+static const float kInt16ToMps = 1.0f / kMpsToInt16;
 
 // Conversion factor for the linear acceleration registers. 16-bit signed
 // registers with a max value of 157 mps^2 (16 g) gives a resolution of
 // about 0.0048 mps^2 (0.49 mg)
-static const double kMpssToInt16 = 32768.0f / (16.0f * 9.80665f);
-static const double kInt16ToMpss = 1.0f / kMpssToInt16;
+static const float kMpssToInt16 = 32768.0f / (16.0f * 9.80665f);
+static const float kInt16ToMpss = 1.0f / kMpssToInt16;
 
 // Conversion factor for the angular position registers. 16-bit signed
 // registers with a max value of pi radians (180 degrees) gives a resolution
 // of about 0.00096 radians (0.0055 degrees)
-static const double kRadToInt16 = 32768.0f / M_PI;
-static const double kInt16ToRad = 1.0f / kRadToInt16;
+static const float kRadToInt16 = 32768.0f / M_PI;
+static const float kInt16ToRad = 1.0f / kRadToInt16;
 
 // Conversion factor for the angular velocity registers. 16-bit signed
 // registers with a max value of 34.9 rps (2000 dps) gives a resolution of
 // about 0.0011 rps (0.061 degrees per second)
-static const double kRpsToInt16 = 32768.0f / (2000.0f * kDegreeToRadian);
-static const double kInt16ToRps = 1.0f / kRpsToInt16;
+static const float kRpsToInt16 = 32768.0f / (2000.0f * kDegreeToRadian);
+static const float kInt16ToRps = 1.0f / kRpsToInt16;
 
 // Conversion factor for the angular acceleration registers. 16-bit signed
 // registers with a max value of 3141 rps^2 (180000 dps^2) gives a
 // resolution of about 0.096 rps^2 (5.5 dps^2)
-static const double kRpssToInt16 = 32768.0f / (M_PI * 1000.0f);
-static const double kInt16ToRpss = 1.0f / kRpssToInt16;
+static const float kRpssToInt16 = 32768.0f / (M_PI * 1000.0f);
+static const float kInt16ToRpss = 1.0f / kRpssToInt16;
 
 /// @struct sfe_otos_pose2d_t
 /// @brief 2D pose structure, including x and y coordinates and heading angle
@@ -272,13 +272,14 @@ typedef struct {
 	sfe_otos_pose2d_t accStdDev;
 	uint8_t RxBuffer[44];
 	//PAA5160E1_offsets offsets;
+	sfe_otos_status_t status;
 	PAA5160E1_Calibration_Stat Calibration_Stat;
 }PAA5160E1_Structure;
 
 /// @brief Begins the Qwiic OTOS and verifies it is connected
 /// @param commBus I2C bus to use for communication
 /// @return 0 for succuss, negative for errors, positive for warnings
-HAL_StatusTypeDef PAA5160E1_Init(PAA5160E1_Structure *paa, I2C_HandleTypeDef *hi2cx, uint8_t addr, OPRMode mode, uint8_t unit);
+HAL_StatusTypeDef PAA5160E1_Init(PAA5160E1_Structure *paa, I2C_HandleTypeDef *hi2cx);
 
 /// @brief Checks if the device is connected
 /// @return 0 for succuss, negative for errors, positive for warnings
@@ -312,7 +313,7 @@ HAL_StatusTypeDef PAA5160E1_getImuCalibrationProgress(PAA5160E1_Structure *paa);
 /// @brief Gets the linear scalar used by the OTOS
 /// @param scalar Linear scalar
 /// @return 0 for succuss, negative for errors, positive for warnings
-HAL_StatusTypeDef PAA5160E1_getLinearScalar(PAA5160E1_Structure *paa);
+float PAA5160E1_getLinearScalar(PAA5160E1_Structure *paa);
 
 /// @brief Sets the linear scalar used by the OTOS. Can be used to
 /// compensate for scaling issues with the sensor measurements
@@ -323,7 +324,7 @@ HAL_StatusTypeDef PAA5160E1_setLinearScalar(PAA5160E1_Structure *paa, float scal
 /// @brief Gets the angular scalar used by the OTOS
 /// @param scalar Angular scalar
 /// @return 0 for succuss, negative for errors, positive for warnings
-HAL_StatusTypeDef PAA5160E1_getAngularScalar(PAA5160E1_Structure *paa);
+float PAA5160E1_getAngularScalar(PAA5160E1_Structure *paa);
 
 /// @brief Sets the angular scalar used by the OTOS. Can be used to
 /// compensate for scaling issues with the sensor measurements
@@ -440,16 +441,16 @@ HAL_StatusTypeDef PAA5160E1_getPosVelAccStdDev(PAA5160E1_Structure *paa);
 HAL_StatusTypeDef PAA5160E1_getPosVelAccAndStdDev(PAA5160E1_Structure *paa);
 
 // Function to read raw pose registers and convert to specified units
-HAL_StatusTypeDef PAA5160E1_readPoseRegs(PAA5160E1_Structure *paa, float rawToXY, float rawToH);
+HAL_StatusTypeDef PAA5160E1_readPoseRegs(PAA5160E1_Structure *paa, uint8_t reg, float rawToXY, float rawToH);
 
 // Function to write raw pose registers and convert from specified units
-HAL_StatusTypeDef PAA5160E1_writePoseRegs(PAA5160E1_Structure *paa, float xyToRaw, float hToRaw);
+HAL_StatusTypeDef PAA5160E1_writePoseRegs(PAA5160E1_Structure *paa, uint8_t reg, float xyToRaw, float hToRaw);
 
 // Function to convert raw pose registers to a pose structure
-void PAA5160E1_regsToPose(PAA5160E1_Structure *paa, uint8_t *rawData, float rawToXY, float rawToH);
+void PAA5160E1_regsToPose(sfe_otos_pose2d_t *pose, uint8_t *rawData, float rawToXY, float rawToH);
 
 // Function to convert a pose structure to raw pose registers
-void PAA5160E1_poseToRegs(PAA5160E1_Structure *paa, uint8_t *rawData, float xyToRaw, float hToRaw);
+void PAA5160E1_poseToRegs(sfe_otos_pose2d_t *pose, uint8_t *rawData, float xyToRaw, float hToRaw);
 
 
 #endif /* INC_PAA5160E1_H_ */

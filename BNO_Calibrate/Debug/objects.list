@@ -1,3 +1,4 @@
+"./Config/src/Cytron_Motor_260rpm_250W.o"
 "./Core/Src/BNO055.o"
 "./Core/Src/dma.o"
 "./Core/Src/gpio.o"
@@ -29,3 +30,6 @@
 "./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim_ex.o"
 "./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.o"
 "./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart_ex.o"
+"./Library/src/Controller.o"
+"./Library/src/DC_Motor.o"
+"./Library/src/PAA5160E1.o"
