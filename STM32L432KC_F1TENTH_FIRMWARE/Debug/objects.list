@@ -39,6 +39,7 @@
 "./Library/src/AS5600.o"
 "./Library/src/BNO055.o"
 "./Library/src/Controller.o"
+"./Library/src/PAA5160E1.o"
 "./Library/src/RC.o"
 "./Library/src/Tamiya.o"
 "./Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.o"

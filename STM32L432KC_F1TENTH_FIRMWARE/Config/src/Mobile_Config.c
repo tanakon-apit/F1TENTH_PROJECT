@@ -15,15 +15,18 @@ rcl_node_t node;
 
 rcl_publisher_t enc_publisher;
 rcl_publisher_t imu_publisher;
+rcl_publisher_t opticalOdom_publisher;
 
 rcl_subscription_t cmd_subscription;
 
 rcl_timer_t enc_timer;
 rcl_timer_t imu_timer;
+rcl_timer_t opticalOdom_timer;
 
 std_msgs__msg__Float64MultiArray enc_msg;
 std_msgs__msg__Float64MultiArray imu_msg;
 std_msgs__msg__Float64MultiArray cmd_msg;
+std_msgs__msg__Float64MultiArray opticalOdom_msg;
 
 AS5600_Structure as5600;
 
@@ -44,6 +47,8 @@ BNO055_Offsets bno_off = {
 #ifdef BNO_CALIB_ON
 BNO055_Calibration_Status bno_stat;
 #endif
+
+PAA5160E1_Structure paa;
 
 RC_Structure servo;
 RC_Structure bldc;

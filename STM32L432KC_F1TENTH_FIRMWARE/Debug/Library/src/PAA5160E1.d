@@ -1,6 +1,5 @@
-Library/src/Tamiya.o: ../Library/src/Tamiya.c \
- /home/tuchapong1234/F1TENTH_PROJECT/STM32L432KC_F1TENTH_FIRMWARE/Library/inc/Tamiya.h \
- /home/tuchapong1234/F1TENTH_PROJECT/STM32L432KC_F1TENTH_FIRMWARE/Library/inc/RC.h \
+Library/src/PAA5160E1.o: ../Library/src/PAA5160E1.c \
+ /home/tuchapong1234/F1TENTH_PROJECT/STM32L432KC_F1TENTH_FIRMWARE/Library/inc/PAA5160E1.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h \
  ../Core/Inc/stm32l4xx_hal_conf.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h \
@@ -31,8 +30,7 @@ Library/src/Tamiya.o: ../Library/src/Tamiya.c \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h
-/home/tuchapong1234/F1TENTH_PROJECT/STM32L432KC_F1TENTH_FIRMWARE/Library/inc/Tamiya.h:
-/home/tuchapong1234/F1TENTH_PROJECT/STM32L432KC_F1TENTH_FIRMWARE/Library/inc/RC.h:
+/home/tuchapong1234/F1TENTH_PROJECT/STM32L432KC_F1TENTH_FIRMWARE/Library/inc/PAA5160E1.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h:
 ../Core/Inc/stm32l4xx_hal_conf.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h:

@@ -27,37 +27,41 @@ extern rcl_node_t node;
 
 extern rcl_publisher_t enc_publisher;
 extern rcl_publisher_t imu_publisher;
+extern rcl_publisher_t opticalOdom_publisher;
 
 extern rcl_subscription_t cmd_subscription;
 
 extern rcl_timer_t enc_timer;
 extern rcl_timer_t imu_timer;
+extern rcl_timer_t opticalOdom_timer;
 
 extern std_msgs__msg__Float64MultiArray enc_msg;
 extern std_msgs__msg__Float64MultiArray imu_msg;
 extern std_msgs__msg__Float64MultiArray cmd_msg;
+extern std_msgs__msg__Float64MultiArray opticalOdom_msg;
 
 #include "AS5600.h"
 #include "BNO055.h"
+#include "PAA5160E1.h"
 #include "RC.h"
 #include "Controller.h"
 
 #define BNO_CALIB_OFF
 
-#define BNO_ACC_OFF_X 8
-#define BNO_ACC_OFF_Y 17
-#define BNO_ACC_OFF_Z -17
+#define BNO_ACC_OFF_X 37
+#define BNO_ACC_OFF_Y 1
+#define BNO_ACC_OFF_Z -24
 
-#define BNO_MAG_OFF_X -396
-#define BNO_MAG_OFF_Y 179
-#define BNO_MAG_OFF_Z -221
+#define BNO_MAG_OFF_X -153
+#define BNO_MAG_OFF_Y 728
+#define BNO_MAG_OFF_Z 106
 
-#define BNO_GYRO_OFF_X -2
-#define BNO_GYRO_OFF_Y 1
+#define BNO_GYRO_OFF_X -1
+#define BNO_GYRO_OFF_Y 0
 #define BNO_GYRO_OFF_Z 0
 
 #define BNO_ACC_RAD 1000
-#define BNO_MAG_RAD 1207
+#define BNO_MAG_RAD 694
 
 extern AS5600_Structure as5600;
 
@@ -66,6 +70,8 @@ extern BNO055_Offsets bno_off;
 #ifdef BNO_CALIB_ON
 extern BNO055_Calibration_Status bno_stat;
 #endif
+
+extern PAA5160E1_Structure paa;
 
 extern RC_Structure servo;
 extern RC_Structure bldc;

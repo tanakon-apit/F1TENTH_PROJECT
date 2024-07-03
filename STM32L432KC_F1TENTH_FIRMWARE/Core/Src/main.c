@@ -1,20 +1,20 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * @file           : main.c
-  * @brief          : Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2024 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file           : main.c
+ * @brief          : Main program body
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) 2024 STMicroelectronics.
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ * If no LICENSE file comes with this software, it is provided AS-IS.
+ *
+ ******************************************************************************
+ */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
@@ -33,6 +33,7 @@
 #include "Mobile_Config.h"
 #include "stdbool.h"
 #include "math.h"
+#include "PAA5160E1.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -97,6 +98,7 @@ void * microros_zero_allocate(size_t number_of_elements, size_t size_of_element,
 
 void enc_timer_callback(rcl_timer_t * timer, int64_t last_call_time);
 void imu_timer_callback(rcl_timer_t * timer, int64_t last_call_time);
+void opticalOdom_timer_callback(rcl_timer_t * timer, int64_t last_call_time);
 void subscription_callback(const void * msgin);
 
 float ang2rc(float ang);
@@ -123,7 +125,7 @@ void enc_timer_callback(rcl_timer_t * timer, int64_t last_call_time)
 		float speed = ((counter * enc.gain) + enc.pos - enc.unwrap_pos) * 50.0;
 		enc.unwrap_pos = (counter * enc.gain) + enc.pos;
 
-		float error = bldc_cmd - speed_filt;
+		float error = bldc_cmd - speed;
 		float u = 0;
 
 		switch (state)
@@ -202,15 +204,45 @@ void imu_timer_callback(rcl_timer_t * timer, int64_t last_call_time)
 		imu_msg.data.data[0] = bno.gyro.x;
 		imu_msg.data.data[1] = bno.gyro.y;
 		imu_msg.data.data[2] = bno.gyro.z;
-		imu_msg.data.data[3] = bno.lin_acc.x;
-		imu_msg.data.data[4] = bno.lin_acc.y;
-		imu_msg.data.data[5] = bno.lin_acc.z;
+		imu_msg.data.data[3] = bno.accel.x;
+		imu_msg.data.data[4] = bno.accel.y;
+		imu_msg.data.data[5] = bno.accel.z;
 		imu_msg.data.data[6] = bno.quat.x;
 		imu_msg.data.data[7] = bno.quat.y;
 		imu_msg.data.data[8] = bno.quat.z;
 		imu_msg.data.data[9] = bno.quat.w;
 #endif
 		if (!isfirst_callback) RCSOFTCHECK(rcl_publish(&imu_publisher, &imu_msg, NULL))
+				else isfirst_callback = !isfirst_callback;
+	}
+}
+
+void opticalOdom_timer_callback(rcl_timer_t * timer, int64_t last_call_time)
+{
+	static bool isfirst_callback = true;
+	RCLC_UNUSED(last_call_time);
+	if (timer != NULL)
+	{
+#ifdef SENSOR_ON
+		if (paa.flag == HAL_OK)
+		{
+			PAA5160E1_getPosVelAccAndStdDev_DMA(&paa);
+			paa.flag = HAL_BUSY;
+		}
+		opticalOdom_msg.data.data[0] = paa.pos.x;
+		opticalOdom_msg.data.data[1] = paa.pos.y;
+		opticalOdom_msg.data.data[2] = paa.pos.h;
+		opticalOdom_msg.data.data[3] = paa.posStdDev.x;
+		opticalOdom_msg.data.data[4] = paa.posStdDev.y;
+		opticalOdom_msg.data.data[5] = paa.posStdDev.h;
+		opticalOdom_msg.data.data[6] = paa.vel.x;
+		opticalOdom_msg.data.data[7] = paa.vel.y;
+		opticalOdom_msg.data.data[8] = paa.vel.h;
+		opticalOdom_msg.data.data[9] = paa.velStdDev.x;
+		opticalOdom_msg.data.data[10] = paa.velStdDev.y;
+		opticalOdom_msg.data.data[11] = paa.velStdDev.h;
+#endif
+		if (!isfirst_callback) RCSOFTCHECK(rcl_publish(&opticalOdom_publisher, &opticalOdom_msg, NULL))
 		else isfirst_callback = !isfirst_callback;
 	}
 }
@@ -254,6 +286,11 @@ void StartDefaultTask(void *argument)
 			&node,
 			ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Float64MultiArray),
 			"imu_raw");
+	rclc_publisher_init_default(
+			&opticalOdom_publisher,
+			&node,
+			ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Float64MultiArray),
+			"opticalOdom_raw");
 
 	rclc_subscription_init_default(
 			&cmd_subscription,
@@ -267,10 +304,17 @@ void StartDefaultTask(void *argument)
 			RCL_MS_TO_NS(20),
 			enc_timer_callback);
 
-	rclc_timer_init_default(&imu_timer,
+	rclc_timer_init_default(
+			&imu_timer,
 			&support,
 			RCL_MS_TO_NS(10),
 			imu_timer_callback);
+
+	rclc_timer_init_default(
+			&opticalOdom_timer,
+			&support,
+			RCL_MS_TO_NS(10),
+			opticalOdom_timer_callback);
 
 	enc_msg.data.capacity = 2;
 	enc_msg.data.data = (double*) malloc(enc_msg.data.capacity * sizeof(double));
@@ -280,14 +324,20 @@ void StartDefaultTask(void *argument)
 	imu_msg.data.data = (double*) malloc(imu_msg.data.capacity * sizeof(double));
 	imu_msg.data.size = 10;
 
+
+	opticalOdom_msg.data.capacity = 12;
+	opticalOdom_msg.data.data = (double*) malloc(opticalOdom_msg.data.capacity * sizeof(double));
+	opticalOdom_msg.data.size = 12;
+
 	cmd_msg.data.capacity = 2;
 	cmd_msg.data.data = (double*) malloc(cmd_msg.data.capacity * sizeof(double));
 	cmd_msg.data.size = 2;
 
-	rclc_executor_init(&executor, &support.context, 3, &allocator);
+	rclc_executor_init(&executor, &support.context, 4, &allocator);
 	rclc_executor_add_subscription(&executor, &cmd_subscription, &cmd_msg, &subscription_callback, ON_NEW_DATA);
 	rclc_executor_add_timer(&executor, &enc_timer);
 	rclc_executor_add_timer(&executor, &imu_timer);
+	rclc_executor_add_timer(&executor, &opticalOdom_timer);
 	rclc_executor_spin(&executor);
 
 	while(1)
@@ -298,136 +348,138 @@ void StartDefaultTask(void *argument)
 /* USER CODE END 0 */
 
 /**
-  * @brief  The application entry point.
-  * @retval int
-  */
+ * @brief  The application entry point.
+ * @retval int
+ */
 int main(void)
 {
 
-  /* USER CODE BEGIN 1 */
+	/* USER CODE BEGIN 1 */
 
-  /* USER CODE END 1 */
+	/* USER CODE END 1 */
 
-  /* MCU Configuration--------------------------------------------------------*/
+	/* MCU Configuration--------------------------------------------------------*/
 
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+	HAL_Init();
 
-  /* USER CODE BEGIN Init */
+	/* USER CODE BEGIN Init */
 
-  /* USER CODE END Init */
+	/* USER CODE END Init */
 
-  /* Configure the system clock */
-  SystemClock_Config();
+	/* Configure the system clock */
+	SystemClock_Config();
 
-  /* USER CODE BEGIN SysInit */
+	/* USER CODE BEGIN SysInit */
 
-  /* USER CODE END SysInit */
+	/* USER CODE END SysInit */
 
-  /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_DMA_Init();
-  MX_USART2_UART_Init();
-  MX_TIM1_Init();
-  MX_TIM15_Init();
-  MX_I2C1_Init();
-  /* USER CODE BEGIN 2 */
+	/* Initialize all configured peripherals */
+	MX_GPIO_Init();
+	MX_DMA_Init();
+	MX_USART2_UART_Init();
+	MX_TIM1_Init();
+	MX_TIM15_Init();
+	MX_I2C1_Init();
+	MX_I2C3_Init();
+	/* USER CODE BEGIN 2 */
 #ifdef SENSOR_ON
-  HALCHECK(BNO055_Init(&bno, &hi2c1, 0, NDOF))
+	HALCHECK(BNO055_Init(&bno, &hi2c1, 0, NDOF))
+	//HALCHECK(PAA5160E1_Init(&paa, &h))
 #ifdef BNO_CALIB_ON
-  BNO055_Calibrated(&bno, &bno_stat, &bno_off);
+	BNO055_Calibrated(&bno, &bno_stat, &bno_off);
 #endif
-  BNO055_SetOffsets(&bno, &bno_off);
-  BNO055_SetAxis(&bno, P0_Config, P0_Sign);
-  HALCHECK(RC_Init(&servo, &htim15, TIM_CHANNEL_1, CPU_FREQ, true))
-  HALCHECK(RC_Init(&bldc, &htim15, TIM_CHANNEL_2, CPU_FREQ, false))
-  RC_Set_Input_Range(&servo, 500, 2500);
-  RC_Set_Input_Range(&bldc, 500, 2500);
-  PID_CONTROLLER_Init(&pid, KP, KI, KD, 500);
-  HAL_TIM_Encoder_Start(&htim1, TIM_CHANNEL_ALL);
+	BNO055_SetOffsets(&bno, &bno_off);
+	BNO055_SetAxis(&bno, P0_Config, P0_Sign);
+	HALCHECK(RC_Init(&servo, &htim15, TIM_CHANNEL_1, CPU_FREQ, true))
+	HALCHECK(RC_Init(&bldc, &htim15, TIM_CHANNEL_2, CPU_FREQ, false))
+	RC_Set_Input_Range(&servo, 500, 2500);
+	RC_Set_Input_Range(&bldc, 500, 2500);
+	PID_CONTROLLER_Init(&pid, KP, KI, KD, 500);
+	HAL_TIM_Encoder_Start(&htim1, TIM_CHANNEL_ALL);
 #endif
-  /* USER CODE END 2 */
+	/* USER CODE END 2 */
 
-  /* Init scheduler */
-  osKernelInitialize();
+	/* Init scheduler */
+	osKernelInitialize();
 
-  /* Call init function for freertos objects (in cmsis_os2.c) */
-  MX_FREERTOS_Init();
+	/* Call init function for freertos objects (in cmsis_os2.c) */
+	MX_FREERTOS_Init();
 
-  /* Start scheduler */
-  osKernelStart();
+	/* Start scheduler */
+	osKernelStart();
 
-  /* We should never get here as control is now taken by the scheduler */
+	/* We should never get here as control is now taken by the scheduler */
 
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
-  while (1)
-  {
-    /* USER CODE END WHILE */
+	/* Infinite loop */
+	/* USER CODE BEGIN WHILE */
+	while (1)
+	{
+		/* USER CODE END WHILE */
 
-    /* USER CODE BEGIN 3 */
-  }
-  /* USER CODE END 3 */
+		/* USER CODE BEGIN 3 */
+	}
+	/* USER CODE END 3 */
 }
 
 /**
-  * @brief System Clock Configuration
-  * @retval None
-  */
+ * @brief System Clock Configuration
+ * @retval None
+ */
 void SystemClock_Config(void)
 {
-  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
-  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+	RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+	RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
-  /** Configure the main internal regulator output voltage
-  */
-  if (HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1) != HAL_OK)
-  {
-    Error_Handler();
-  }
+	/** Configure the main internal regulator output voltage
+	 */
+	if (HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1) != HAL_OK)
+	{
+		Error_Handler();
+	}
 
-  /** Configure LSE Drive Capability
-  */
-  HAL_PWR_EnableBkUpAccess();
-  __HAL_RCC_LSEDRIVE_CONFIG(RCC_LSEDRIVE_LOW);
+	/** Configure LSE Drive Capability
+	 */
+	HAL_PWR_EnableBkUpAccess();
+	__HAL_RCC_LSEDRIVE_CONFIG(RCC_LSEDRIVE_LOW);
 
-  /** Initializes the RCC Oscillators according to the specified parameters
-  * in the RCC_OscInitTypeDef structure.
-  */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSE|RCC_OSCILLATORTYPE_MSI;
-  RCC_OscInitStruct.LSEState = RCC_LSE_ON;
-  RCC_OscInitStruct.MSIState = RCC_MSI_ON;
-  RCC_OscInitStruct.MSICalibrationValue = 0;
-  RCC_OscInitStruct.MSIClockRange = RCC_MSIRANGE_6;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_MSI;
-  RCC_OscInitStruct.PLL.PLLM = 1;
-  RCC_OscInitStruct.PLL.PLLN = 40;
-  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV7;
-  RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV2;
-  RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
-  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-  {
-    Error_Handler();
-  }
+	/** Initializes the RCC Oscillators according to the specified parameters
+	 * in the RCC_OscInitTypeDef structure.
+	 */
+	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSE|RCC_OSCILLATORTYPE_MSI;
+	RCC_OscInitStruct.LSEState = RCC_LSE_ON;
+	RCC_OscInitStruct.MSIState = RCC_MSI_ON;
+	RCC_OscInitStruct.MSICalibrationValue = 0;
+	RCC_OscInitStruct.MSIClockRange = RCC_MSIRANGE_6;
+	RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+	RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_MSI;
+	RCC_OscInitStruct.PLL.PLLM = 1;
+	RCC_OscInitStruct.PLL.PLLN = 40;
+	RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV7;
+	RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV2;
+	RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
+	if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+	{
+		Error_Handler();
+	}
 
-  /** Initializes the CPU, AHB and APB buses clocks
-  */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+	/** Initializes the CPU, AHB and APB buses clocks
+	 */
+	RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+			|RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+	RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+	RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+	RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+	RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_4) != HAL_OK)
-  {
-    Error_Handler();
-  }
+	if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_4) != HAL_OK)
+	{
+		Error_Handler();
+	}
 
-  /** Enable MSI Auto calibration
-  */
-  HAL_RCCEx_EnableMSIPLLMode();
+	/** Enable MSI Auto calibration
+	 */
+	HAL_RCCEx_EnableMSIPLLMode();
 }
 
 /* USER CODE BEGIN 4 */
@@ -446,54 +498,54 @@ float ang2rc(float ang)
 /* USER CODE END 4 */
 
 /**
-  * @brief  Period elapsed callback in non blocking mode
-  * @note   This function is called  when TIM6 interrupt took place, inside
-  * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
-  * a global variable "uwTick" used as application time base.
-  * @param  htim : TIM handle
-  * @retval None
-  */
+ * @brief  Period elapsed callback in non blocking mode
+ * @note   This function is called  when TIM6 interrupt took place, inside
+ * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
+ * a global variable "uwTick" used as application time base.
+ * @param  htim : TIM handle
+ * @retval None
+ */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-  /* USER CODE BEGIN Callback 0 */
+	/* USER CODE BEGIN Callback 0 */
 
-  /* USER CODE END Callback 0 */
-  if (htim->Instance == TIM6) {
-    HAL_IncTick();
-  }
-  /* USER CODE BEGIN Callback 1 */
+	/* USER CODE END Callback 0 */
+	if (htim->Instance == TIM6) {
+		HAL_IncTick();
+	}
+	/* USER CODE BEGIN Callback 1 */
 
-  /* USER CODE END Callback 1 */
+	/* USER CODE END Callback 1 */
 }
 
 /**
-  * @brief  This function is executed in case of error occurrence.
-  * @retval None
-  */
+ * @brief  This function is executed in case of error occurrence.
+ * @retval None
+ */
 void Error_Handler(void)
 {
-  /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state */
-  __disable_irq();
-  while (1)
-  {
-  }
-  /* USER CODE END Error_Handler_Debug */
+	/* USER CODE BEGIN Error_Handler_Debug */
+	/* User can add his own implementation to report the HAL error return state */
+	__disable_irq();
+	while (1)
+	{
+	}
+	/* USER CODE END Error_Handler_Debug */
 }
 
 #ifdef  USE_FULL_ASSERT
 /**
-  * @brief  Reports the name of the source file and the source line number
-  *         where the assert_param error has occurred.
-  * @param  file: pointer to the source file name
-  * @param  line: assert_param error line source number
-  * @retval None
-  */
+ * @brief  Reports the name of the source file and the source line number
+ *         where the assert_param error has occurred.
+ * @param  file: pointer to the source file name
+ * @param  line: assert_param error line source number
+ * @retval None
+ */
 void assert_failed(uint8_t *file, uint32_t line)
 {
-  /* USER CODE BEGIN 6 */
-  /* User can add his own implementation to report the file name and line number,
+	/* USER CODE BEGIN 6 */
+	/* User can add his own implementation to report the file name and line number,
      ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-  /* USER CODE END 6 */
+	/* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
