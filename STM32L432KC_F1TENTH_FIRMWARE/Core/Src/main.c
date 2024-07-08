@@ -385,12 +385,18 @@ int main(void)
 	/* USER CODE BEGIN 2 */
 #ifdef SENSOR_ON
 	HALCHECK(BNO055_Init(&bno, &hi2c1, 0, NDOF))
-	//HALCHECK(PAA5160E1_Init(&paa, &h))
+	PAA5160E1_Init(&paa, &hi2c3);
+	PAA5160E1_calibrateImu(&paa, 255, 1);
 #ifdef BNO_CALIB_ON
 	BNO055_Calibrated(&bno, &bno_stat, &bno_off);
 #endif
 	BNO055_SetOffsets(&bno, &bno_off);
 	BNO055_SetAxis(&bno, P0_Config, P0_Sign);
+	resetTracking(&paa);
+	paa.pos.x = 0.0;
+	paa.pos.y = 0.0;
+	paa.pos.h = 0.0;
+	PAA5160E1_setPosition(&paa);
 	HALCHECK(RC_Init(&servo, &htim15, TIM_CHANNEL_1, CPU_FREQ, true))
 	HALCHECK(RC_Init(&bldc, &htim15, TIM_CHANNEL_2, CPU_FREQ, false))
 	RC_Set_Input_Range(&servo, 500, 2500);
@@ -486,6 +492,7 @@ void SystemClock_Config(void)
 void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c)
 {
 	if (hi2c->Instance == bno.hi2cx->Instance) bno.flag = HAL_OK;
+	if (hi2c->Instance == paa.hi2cx->Instance) paa.flag = HAL_OK;
 }
 
 float ang2rc(float ang)

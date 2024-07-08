@@ -20,14 +20,12 @@
 
 HAL_StatusTypeDef PAA5160E1_Init(PAA5160E1_Structure *paa, I2C_HandleTypeDef *hi2cx)
 {
-	uint8_t txbuffer;
 	uint8_t rxbuffer;
 
 	paa->hi2cx = hi2cx;
 	paa->address = kDefaultAddress;
 
-	HAL_StatusTypeDef status;
-	status = HAL_I2C_Mem_Read(paa->hi2cx, paa->address, kRegProductId, 1, &rxbuffer, 1, 10);
+	HAL_I2C_Mem_Read(paa->hi2cx, paa->address, kRegProductId, 1, &rxbuffer, 1, 10);
 
 	if (rxbuffer != kProductId) {
 		HAL_Delay(1000);
